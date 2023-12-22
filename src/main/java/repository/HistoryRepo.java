@@ -2,6 +2,7 @@ package repository;
 
 import model.entity.HistoryEntity;
 
+
 import java.util.List;
 
 public interface HistoryRepo {
