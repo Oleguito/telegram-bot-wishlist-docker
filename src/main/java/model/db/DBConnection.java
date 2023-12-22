@@ -11,7 +11,8 @@ public class DBConnection {
 
     private DBConnection() {
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://83.147.246.87:5432/postgres", "pavelioleg_user", "12345");
+            connection = DriverManager.getConnection("jdbc:postgresql://83.147.246.87:5432/postgres",
+                    "pavelioleg_user", "12345");
         } catch (Exception e) {
             System.out.println("Произошла ошибка при подключении к БД");
         }
