@@ -1,4 +1,6 @@
 package service.impl;
 
-public class HistoryServiceImpl {
+import service.HistoryService;
+
+public class HistoryServiceImpl implements HistoryService {
 }
