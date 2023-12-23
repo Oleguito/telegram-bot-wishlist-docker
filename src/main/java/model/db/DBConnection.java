@@ -31,15 +31,4 @@ public class DBConnection {
         }
         return instance;
     }
-
-    public void executeQuery() {
-//        ResultSet resultSet = null;
-//        try {
-////            resultSet = connection.prepareStatement("select username, title from users u join country c on u.country_id = c.id").executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(resultSet);
-    }
-
 }

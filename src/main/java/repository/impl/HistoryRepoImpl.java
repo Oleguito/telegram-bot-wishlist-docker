@@ -2,9 +2,12 @@ package repository.impl;
 
 import model.entity.HistoryEntity;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryRepoImpl implements repository.HistoryRepo {
@@ -25,21 +28,41 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
             preparedStatement.setTimestamp(3, historyEntity.getOperation_time());
             preparedStatement.execute();
         } catch (SQLException e) {
-            System.out.println("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());        }
-
+            throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
+        }
     }
 
     @Override
-    public void clear() {
-
+    public void clear(@NotNull Long userId) {
+        try {
+            String query = "delete from history where user_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, userId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
+        }
     }
 
     @Override
-    public List<HistoryEntity> select(long chatID) {
-        return null;
-//        List<HistoryEntity> historyEntities = new ArrayList<>();
-//
-//        String query = "select "
-
+    public List<HistoryEntity> select(@NotNull Long userId) {
+       List<HistoryEntity> historyEntities = new ArrayList<>();
+       try {
+            String query = "select * from history where user_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                historyEntities.add(HistoryEntity.builder()
+                        .id(resultSet.getLong("id"))
+                        .user_id(resultSet.getInt("user_id"))
+                        .command(resultSet.getString("command"))
+                        .operation_time(resultSet.getTimestamp("operation_time"))
+                        .build());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
+        }
+       return historyEntities;
     }
 }

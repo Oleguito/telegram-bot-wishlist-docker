@@ -13,6 +13,9 @@ import repository.impl.ParserRepoImpl;
 import repository.impl.UserRepoImpl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Getter
 public class DBManager {
@@ -45,5 +48,18 @@ public class DBManager {
         }
         return instance;
     }
-
+    
+    
+    public ResultSet executeSelect(String query) {
+       ResultSet resultSet = null;
+       try {
+           /* "select username, title from users u join country c on u.country_id = c.id" */
+           resultSet = connection.prepareStatement(query).executeQuery();
+       } catch (SQLException e) {
+           e.printStackTrace();
+           throw new RuntimeException();
+       }
+       return resultSet;
+    }
+    
 }
