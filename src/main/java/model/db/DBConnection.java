@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBConnection {
+    
+    private static DBConnection instance = null;
 
     private Connection connection;
 
@@ -14,7 +16,7 @@ public class DBConnection {
             connection = DriverManager.getConnection("jdbc:postgresql://83.147.246.87:5432/postgres",
                     "pavelioleg_user", "12345");
         } catch (Exception e) {
-            System.out.println("Произошла ошибка при подключении к БД");
+            throw new RuntimeException("Произошла ошибка при подключении к БД. Подробности: " + e.getMessage());
         }
     }
 
@@ -22,7 +24,6 @@ public class DBConnection {
         return connection;
     }
 
-    private static DBConnection instance = null;
 
     public static DBConnection getInstance() {
         if (instance == null) {
