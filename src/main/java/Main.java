@@ -14,10 +14,10 @@ import java.time.Instant;
 
 public class Main {
     public static void main(String[] args) {
-        var dbmanager = DBManager.getInstance();
-        HistoryRepo historyRepo = dbmanager.getHistoryRepo();
-        List<HistoryEntity> userhistory = historyRepo.select(1324L);
-        userhistory.forEach(System.out::println);
+        // var dbmanager = DBManager.getInstance();
+        // HistoryRepo historyRepo = dbmanager.getHistoryRepo();
+        // List<HistoryEntity> userhistory = historyRepo.select(1324L);
+        // userhistory.forEach(System.out::println);
         // var res = DBManager
         //         .getInstance()
         //         .getHistoryRepo()
@@ -36,15 +36,15 @@ public class Main {
         // ParserRepo parser = new ParserRepoImpl();
         // var movie = parser.parse("https://www.kinopoisk.ru/film/476/");
         
+        // System.out.println("");
         
-        
-        // try {
-        //     TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        //     telegramBotsApi.registerBot(new WishlistTelegramBot());
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        //     throw new RuntimeException();
-        // }
+        try {
+            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+            telegramBotsApi.registerBot(new WishlistTelegramBot());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
         
     }
 }
