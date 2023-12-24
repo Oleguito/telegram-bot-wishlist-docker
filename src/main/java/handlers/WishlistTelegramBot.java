@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import resolvers.CommandResolver;
 import resolvers.impl.AddMovieCommandResolver;
+import service.sessions.Session;
 import service.sessions.SessionManager;
 
 import java.io.*;
@@ -50,6 +51,11 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             CommandResolver commandResolver = resolvers.get(callData);
             commandResolver.resolveCommand(this, callData, chatID);
 
+//             sendMessage(callData, chatID.toString());
+//             sendMessage(chatID.toString(), chatID.toString());
+//             sendMessage(SessionManager.getInstance().getSession(chatID).getState().toString(),
+//                     chatID.toString());
+            
             SessionManager.getInstance().manageSession(callData, chatID);
             
         }
@@ -66,8 +72,8 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
                 if(commandText.startsWith("/start")) {
                     greetingScreen(message);
                 } else {
-
-                }
+                    SessionManager.getInstance().createSession(chatID);
+                } 
 
             }
         }
