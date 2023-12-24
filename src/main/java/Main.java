@@ -68,13 +68,13 @@ public class Main {
         
         
         
-        // try {
-        //     TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        //     telegramBotsApi.registerBot(new WishlistTelegramBot());
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        //     throw new RuntimeException();
-        // }
+        try {
+            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+            telegramBotsApi.registerBot(new WishlistTelegramBot());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
         
     }
 }
