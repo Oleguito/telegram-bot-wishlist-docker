@@ -4,6 +4,9 @@ import model.entity.UserEntity;
 import repository.UserRepo;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Optional;
 
 public class UserRepoImpl implements UserRepo {
     
@@ -15,11 +18,31 @@ public class UserRepoImpl implements UserRepo {
     
     @Override
     public void saveUser(UserEntity userEntity) {
-
+        try {
+            String query = "insert into users (id, username) values (?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, userEntity.getId());
+            preparedStatement.setString(2, userEntity.getUsername());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
+        }
     }
 
     @Override
-    public void getUsername(int user_id) {
-
+    public Optional <String> getUsername(long userId) {
+        try {
+            String query = "select * from users where id = ? limit 1";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, userId);
+            var resultSet = preparedStatement.executeQuery();
+            if(!resultSet.isBeforeFirst()) {
+                return Optional.empty();
+            }
+            resultSet.next();
+            return Optional.of(resultSet.getString("username"));
+        } catch (SQLException e) {
+            throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
+        }
     }
 }

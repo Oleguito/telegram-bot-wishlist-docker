@@ -2,8 +2,6 @@ package model.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class DBConnection {
     
@@ -19,16 +17,15 @@ public class DBConnection {
             throw new RuntimeException("Произошла ошибка при подключении к БД. Подробности: " + e.getMessage());
         }
     }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-
+    
     public static DBConnection getInstance() {
-        if (instance == null) {
-            instance = new DBConnection();
+        if(instance == null) {
+            return new DBConnection();
         }
         return instance;
+    }
+    
+    public Connection getConnection() {
+        return connection;
     }
 }

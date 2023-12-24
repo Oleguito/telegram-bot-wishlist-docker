@@ -28,14 +28,17 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
                 
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(message.getChatId());
-                sendMessage.setText("ОлегОлегОлегОлегОлегОлегОлегОлегОлегОлег");
+                sendMessage.setText("Картинка будет побольше");
+                
                 InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
                 List<List <InlineKeyboardButton>> buttonLines = new ArrayList <>();
                 for(var i : Commands.values()) {
                     buttonLines.add(List.of(ButtonGenerator.generateButton(i.getValue())));
                 }
+                
                 markupInline.setKeyboard(buttonLines);
                 sendMessage.setReplyMarkup(markupInline);
+                
                 try {
                     execute(sendMessage);
                 } catch (TelegramApiException e) {
