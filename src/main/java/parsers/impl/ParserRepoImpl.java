@@ -4,9 +4,17 @@ import model.entity.MovieEntity;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import parsers.ParserRepo;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 
 public class ParserRepoImpl implements ParserRepo {
     
@@ -24,15 +32,46 @@ public class ParserRepoImpl implements ParserRepo {
         split = title.split(",");
         String movieTitle = split[0];
         String movieYear = split[1].split("\s")[1];
-        
+//        String picture_href = doc.select("body").get(0).select("div#__next > div:nth-child(2) > div:nth-child(2) > main > div:nth-child(1) > div:nth-child(2) > div").get(0).select(" > div:nth-child(1) > div > div").get(0).select(" > div:nth-child(1)").get(0).select("a > img").attr("src");
+//        String src = doc.select("img[class^='film-poster']").get(0).attr("src");
+
+//        byte[] picture = getPicture(src);
         return MovieEntity.builder()
                 .id(Integer.parseInt(id))
                 .ref(reference)
                 .title(movieTitle)
                 .year(Integer.parseInt(movieYear))
+//                .picture(picture)
                 .build();
     }
-    
+
+    private byte[] getPicture(String href) {
+
+        byte[] result = null;
+
+        HttpURLConnection urlcon;
+        URL connection = null;
+        try {
+            connection = new URL(href);
+
+            urlcon = (HttpURLConnection) connection.openConnection();
+            urlcon.setRequestMethod("GET");
+
+            urlcon.connect();
+            InputStream inputStream = urlcon.getInputStream();
+            result = inputStream.readAllBytes();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+
     private Document getDocument(String reference) {
         try {
             

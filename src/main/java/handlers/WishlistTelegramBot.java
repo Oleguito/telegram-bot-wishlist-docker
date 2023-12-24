@@ -2,6 +2,7 @@ package handlers;
 
 import buttons.ButtonGenerator;
 import commands.Commands;
+import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -11,15 +12,29 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import resolvers.CommandResolver;
+import resolvers.impl.AddMovieCommandResolver;
 import service.sessions.Session;
 import service.sessions.SessionManager;
 
-import java.io.File;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WishlistTelegramBot extends TelegramLongPollingBot {
-    
+
+    Map<String, CommandResolver> resolvers;
+
+    public WishlistTelegramBot() {
+        super();
+        this.resolvers = new HashMap<>();
+        this.resolvers.put("/add", new AddMovieCommandResolver());
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
         
@@ -30,10 +45,16 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             String callData = query.getData();
             Long chatID = query.getMessage().getChatId();
             
-            sendMessage(callData, chatID.toString());
-            sendMessage(chatID.toString(), chatID.toString());
-            sendMessage(SessionManager.getInstance().getSession(chatID).getState().toString(),
-                    chatID.toString());
+            // sendMessage(call_data, chat_id.toString());
+            // sendMessage(chat_id.toString(), chat_id.toString());
+
+            CommandResolver commandResolver = resolvers.get(callData);
+            commandResolver.resolveCommand(this, callData, chatID);
+
+//             sendMessage(callData, chatID.toString());
+//             sendMessage(chatID.toString(), chatID.toString());
+//             sendMessage(SessionManager.getInstance().getSession(chatID).getState().toString(),
+//                     chatID.toString());
             
             SessionManager.getInstance().manageSession(callData, chatID);
             
@@ -41,6 +62,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         
         /* Обработка сообщений пользователя */
         if(update.hasMessage()) {
+
             var message = update.getMessage();
             
             if(message.hasText()) {
@@ -49,11 +71,10 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
                 
                 if(commandText.startsWith("/start")) {
                     greetingScreen(message);
-                    SessionManager.getInstance().createSession(chatID);
                 } else {
-                
-                
-                }
+                    SessionManager.getInstance().createSession(chatID);
+                } 
+
             }
         }
     }
