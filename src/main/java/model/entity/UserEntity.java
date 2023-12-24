@@ -6,6 +6,6 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UserEntity {
-    private final int id;
+    private final long id;
     private final String username;
 }

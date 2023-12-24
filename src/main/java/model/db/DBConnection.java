@@ -2,10 +2,10 @@ package model.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class DBConnection {
+    
+    private static DBConnection instance = null;
 
     private Connection connection;
 
@@ -14,31 +14,18 @@ public class DBConnection {
             connection = DriverManager.getConnection("jdbc:postgresql://83.147.246.87:5432/postgres",
                     "pavelioleg_user", "12345");
         } catch (Exception e) {
-            System.out.println("Произошла ошибка при подключении к БД");
+            throw new RuntimeException("Произошла ошибка при подключении к БД. Подробности: " + e.getMessage());
         }
     }
-
-    public Connection getConnection() {
-        return connection;
-    }
-
-    private static DBConnection instance = null;
-
+    
     public static DBConnection getInstance() {
-        if (instance == null) {
-            instance = new DBConnection();
+        if(instance == null) {
+            return new DBConnection();
         }
         return instance;
     }
-
-    public void executeQuery() {
-//        ResultSet resultSet = null;
-//        try {
-////            resultSet = connection.prepareStatement("select username, title from users u join country c on u.country_id = c.id").executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(resultSet);
+    
+    public Connection getConnection() {
+        return connection;
     }
-
 }

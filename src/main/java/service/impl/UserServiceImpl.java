@@ -1,6 +1,27 @@
 package service.impl;
 
+import model.db.DBManager;
+import model.entity.UserEntity;
+import repository.UserRepo;
 import service.UserService;
 
+import java.util.Optional;
+
 public class UserServiceImpl implements UserService {
+
+    private final UserRepo userRepo;
+
+    public UserServiceImpl() {
+        this.userRepo = DBManager.getInstance().getUserRepo();
+    }
+
+    @Override
+    public void saveUser(UserEntity userEntity) {
+        userRepo.saveUser(userEntity);
+    }
+
+    @Override
+    public Optional<String> getUsername(long user_id) {
+        return userRepo.getUsername(user_id);
+    }
 }
