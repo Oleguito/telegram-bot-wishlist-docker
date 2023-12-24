@@ -2,14 +2,22 @@ import handlers.WishlistTelegramBot;
 import model.db.DBManager;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import parsers.impl.ParserRepoImpl;
 import repository.MoviesRepo;
 import repository.HistoryRepo;
 import repository.UserRepo;
 import repository.impl.MoviesRepoImpl;
 import repository.impl.UserRepoImpl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         var dbmanager = DBManager.getInstance();
         
         HistoryRepo historyRepo = dbmanager.getHistoryRepo();
@@ -53,10 +61,11 @@ public class Main {
         // var movie = parser.parse("https://www.kinopoisk.ru/film/476/");
         
         // System.out.println("");
-        
-        
-        
-        
+
+//        ParserRepoImpl parserRepo = new ParserRepoImpl();
+//        parserRepo.parse("https://www.kinopoisk.ru/film/326/");
+
+
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(new WishlistTelegramBot());

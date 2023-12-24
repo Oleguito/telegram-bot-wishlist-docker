@@ -11,4 +11,5 @@ public class MovieEntity {
     private final String ref;
     private final String title;
     private final Integer year;
+//    private final byte[] picture;
 }
