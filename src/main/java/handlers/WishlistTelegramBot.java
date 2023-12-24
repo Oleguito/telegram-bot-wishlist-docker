@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import service.sessions.SessionManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,13 +26,13 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         if(update.hasCallbackQuery()) {
             var query = update.getCallbackQuery();
             
-            String call_data = query.getData();
-            Long chat_id = query.getMessage().getChatId();
+            String callData = query.getData();
+            Long chatID = query.getMessage().getChatId();
             
-            sendMessage(call_data, chat_id.toString());
-            sendMessage(chat_id.toString(), chat_id.toString());
+            // sendMessage(call_data, chat_id.toString());
+            // sendMessage(chat_id.toString(), chat_id.toString());
             
-            /* TGSessionManager.getInstance().manageSession(chatID); */
+            SessionManager.getInstance().manageSession(callData, chatID);
             
         }
         

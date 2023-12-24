@@ -1,10 +1,10 @@
-package repository.impl;
+package parsers.impl;
 
 import model.entity.MovieEntity;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import repository.ParserRepo;
+import parsers.ParserRepo;
 
 import java.io.IOException;
 

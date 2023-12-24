@@ -1,6 +1,7 @@
 package repository.impl;
 
 import model.entity.HistoryEntity;
+import utils.SQLUtils;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Connection;
@@ -22,11 +23,13 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
     public void insert(HistoryEntity historyEntity) {
         try {
             String query = "insert into history (user_id, command, operation_time) values (?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
             preparedStatement.setInt(1, historyEntity.getUser_id());
             preparedStatement.setString(2, historyEntity.getCommand());
             preparedStatement.setTimestamp(3, historyEntity.getOperation_time());
             preparedStatement.execute();
+            
+            preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }
@@ -36,9 +39,11 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
     public void clear(@NotNull Long userId) {
         try {
             String query = "delete from history where user_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
             preparedStatement.setLong(1, userId);
             preparedStatement.execute();
+            
+            preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }
@@ -49,7 +54,7 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
        List<HistoryEntity> historyEntities = new ArrayList<>();
        try {
             String query = "select * from history where user_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
@@ -60,6 +65,8 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
                         .operation_time(resultSet.getTimestamp("operation_time"))
                         .build());
             }
+            resultSet.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }

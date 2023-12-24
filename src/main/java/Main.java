@@ -1,23 +1,12 @@
 import handlers.WishlistTelegramBot;
 import model.db.DBManager;
-import model.entity.HistoryEntity;
-import model.entity.MovieEntity;
-import model.entity.UserEntity;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import repository.MoviesRepo;
-import repository.ParserRepo;
 import repository.HistoryRepo;
 import repository.UserRepo;
-import repository.impl.HistoryRepoImpl;
 import repository.impl.MoviesRepoImpl;
-import repository.impl.ParserRepoImpl;
 import repository.impl.UserRepoImpl;
-
-import java.util.List;
-
-import java.sql.Timestamp;
-import java.time.Instant;
 
 public class Main {
     public static void main(String[] args) {

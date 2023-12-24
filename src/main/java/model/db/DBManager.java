@@ -5,15 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repository.HistoryRepo;
 import repository.MoviesRepo;
-import repository.ParserRepo;
+import parsers.ParserRepo;
 import repository.UserRepo;
 import repository.impl.HistoryRepoImpl;
 import repository.impl.MoviesRepoImpl;
-import repository.impl.ParserRepoImpl;
+import parsers.impl.ParserRepoImpl;
 import repository.impl.UserRepoImpl;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
