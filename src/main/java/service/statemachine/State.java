@@ -1,10 +1,19 @@
 package service.statemachine;
 
+import lombok.Getter;
+
+@Getter
 public enum State {
-    IDLE,
-    ADD,
-    SHOW_ALL,
-    FIND_BY_TITLE,
-    DELETE,
-    HISTORY
+    IDLE("/idle"),
+    ADD("/add"),
+    SHOW_ALL("/showall"),
+    FIND_BY_TITLE("/findbytitle"),
+    DELETE("/delete"),
+    HISTORY("/history");
+
+    private String value;
+
+    State(String value) {
+        this.value = value;
+    }
 }

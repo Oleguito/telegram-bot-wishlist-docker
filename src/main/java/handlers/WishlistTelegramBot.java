@@ -2,13 +2,14 @@ package handlers;
 
 import buttons.ButtonGenerator;
 import commands.Commands;
-import lombok.SneakyThrows;
+import commands.StartCommands;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -17,9 +18,7 @@ import resolvers.impl.AddMovieCommandResolver;
 import service.sessions.Session;
 import service.sessions.SessionManager;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,75 +34,80 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         this.resolvers.put("/add", new AddMovieCommandResolver());
     }
 
+    public void init() throws TelegramApiException {
+        this.execute(new SetMyCommands(StartCommands.init(), new BotCommandScopeDefault(), null));
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
-        
+
         /* Обработка кнопок */
-        if(update.hasCallbackQuery()) {
+        if (update.hasCallbackQuery()) {
             var query = update.getCallbackQuery();
-            
+
             String callData = query.getData();
             Long chatID = query.getMessage().getChatId();
-            
-            // sendMessage(call_data, chat_id.toString());
-            // sendMessage(chat_id.toString(), chat_id.toString());
+            processCommand(callData, chatID, callData);
 
-            CommandResolver commandResolver = resolvers.get(callData);
-            commandResolver.resolveCommand(this, callData, chatID);
+//            SessionManager.getInstance().manageSession(callData, chatID);
 
-//             sendMessage(callData, chatID.toString());
-//             sendMessage(chatID.toString(), chatID.toString());
-//             sendMessage(SessionManager.getInstance().getSession(chatID).getState().toString(),
-//                     chatID.toString());
-            
-            SessionManager.getInstance().manageSession(callData, chatID);
-            
         }
-        
+
         /* Обработка сообщений пользователя */
-        if(update.hasMessage()) {
+        if (update.hasMessage()) {
 
             var message = update.getMessage();
-            
-            if(message.hasText()) {
-                var commandText = message.getText();
-                var chatID = message.getChatId();
-                
-                if(commandText.startsWith("/start")) {
-                    greetingScreen(message);
-                } else {
-                    SessionManager.getInstance().createSession(chatID);
-                } 
 
+            if (message.hasText()) {
+                var text = message.getText();
+                var chatID = message.getChatId();
+
+                if (text.startsWith("/start")) {
+
+                    // для текущего пользователя установить состояние на IDLE
+
+                    SessionManager.getInstance().createSession(chatID);
+                    greetingScreen(chatID);
+                } else {
+                    Session session = SessionManager.getInstance().getSession(chatID);
+                    String resolverName = session.getState().getValue();
+                    processCommand(text, chatID, resolverName);
+                }
             }
         }
+
     }
-    
-    private void greetingScreen(Message message) {
+
+    private void processCommand(String text, Long chatID, String resolverName) {
+        CommandResolver commandResolver = resolvers.get(resolverName);
+        commandResolver.resolveCommand(this, text, chatID);
+    }
+
+    private void greetingScreen(Long chat_id) {
         // sendMessage(message.getText(), message.getChatId().toString());
-        
-        sendImageUploadingAFile("src/main/resources/shredder.jpg", message.getChatId().toString());
-        
+
+        sendImageUploadingAFile("src/main/resources/shredder.jpg", chat_id.toString());
+
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(message.getChatId());
+        sendMessage.setChatId(chat_id);
         sendMessage.setText("Сделайте выбор");
-        
+
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List <InlineKeyboardButton>> buttonLines = new ArrayList <>();
-        for(var i : Commands.values()) {
+        List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();
+        for (var i : Commands.values()) {
             buttonLines.add(List.of(ButtonGenerator.generateButton(i.getValue())));
         }
-        
+
         markupInline.setKeyboard(buttonLines);
         sendMessage.setReplyMarkup(markupInline);
-        
+
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
             System.out.println("Что-то пошло не так при отправке сообщения");
         }
     }
-    
+
     private void sendMessage(String text, String chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
@@ -114,7 +118,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             throw new RuntimeException("Не удалось отправить текстовое сообщение пользователю через Telegram Bots API");
         }
     }
-    
+
     public void sendImageUploadingAFile(String filePath, String chatId) {
         // Create send method
         SendPhoto sendPhotoRequest = new SendPhoto();
@@ -129,12 +133,12 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public String getBotUsername() {
         return "kinopoiskwishlistbot";
     }
-    
+
     @Override
     public String getBotToken() {
         return "6305522534:AAGkX6E291mT16sCeCx3pGyLFSuJWaDI-Bo";

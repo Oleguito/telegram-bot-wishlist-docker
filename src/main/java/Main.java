@@ -68,7 +68,9 @@ public class Main {
 
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(new WishlistTelegramBot());
+            WishlistTelegramBot bot = new WishlistTelegramBot();
+            telegramBotsApi.registerBot(bot);
+            bot.init();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException();

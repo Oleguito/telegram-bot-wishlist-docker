@@ -3,16 +3,17 @@ package service.sessions;
 import org.apache.http.io.SessionInputBuffer;
 import service.statemachine.State;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class SessionManager {
     
     static SessionManager instance = null;
-    private Map <Long, Session> userToSession;
+    private Map<Long, Session> userToSession = new HashMap<>();
     
     public static SessionManager getInstance() {
         if(instance == null) {
-            return new SessionManager();
+            instance = new SessionManager();
         }
         return instance;
     }
@@ -33,7 +34,8 @@ public class SessionManager {
     public void createSession(Long chatID) {
         userToSession.put(chatID,
                 Session.builder()
-                        
+                        .sessionID(chatID)
+                        .state(State.IDLE)
                         .build());
     }
     

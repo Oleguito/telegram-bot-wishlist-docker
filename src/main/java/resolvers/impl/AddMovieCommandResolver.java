@@ -9,6 +9,9 @@ import parsers.ParserRepo;
 import parsers.impl.ParserRepoImpl;
 import repository.MoviesRepo;
 import resolvers.CommandResolver;
+import service.sessions.Session;
+import service.sessions.SessionManager;
+import service.statemachine.State;
 
 public class AddMovieCommandResolver implements CommandResolver {
 
@@ -34,12 +37,20 @@ public class AddMovieCommandResolver implements CommandResolver {
                 e.printStackTrace();
             }
 
+            setState(chat_id, State.ADD);
+
         } else {
 
             MovieEntity movie = parserRepo.parse(text);
             moviesRepo.saveMovie(movie);
+            setState(chat_id, State.IDLE);
 
         }
 
+    }
+
+    private void setState(Long chat_id, State state) {
+        Session session = SessionManager.getInstance().getSession(chat_id);
+        session.setState(state);
     }
 }
