@@ -1,4 +1,4 @@
-package repository;
+package parsers;
 
 import model.entity.MovieEntity;
 

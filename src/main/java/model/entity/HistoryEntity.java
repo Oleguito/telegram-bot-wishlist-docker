@@ -3,15 +3,16 @@ package model.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.Timestamp;
 
 @Builder
 @Getter
-@Setter
+@ToString
 public class HistoryEntity {
 
-    private int id;
+    private long id;
     private int user_id;
     private String command;
     private Timestamp operation_time;
