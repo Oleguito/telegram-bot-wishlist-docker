@@ -33,7 +33,7 @@ public class AddMovieCommandResolver implements CommandResolver {
         if (text.startsWith("/add")) {
             TelegramBotUtils.sendMessage(tg_bot, "Введите ссылку на фильм с кинопоиска", chat_id);
             
-            setState(chat_id, State.ADD);
+            SessionManager.getInstance().getSession(chat_id).setState(State.ADD);
 
         } else {
             
@@ -45,8 +45,8 @@ public class AddMovieCommandResolver implements CommandResolver {
                 return;
             }
             
-            moviesRepo.saveMovie(movie);
-            setState(chat_id, State.IDLE);
+            moviesRepo.saveMovie(movie, chat_id);
+            SessionManager.getInstance().getSession(chat_id).setState(State.IDLE);
             
             TelegramBotUtils.sendMessage(tg_bot, "Фильм успешно добавлен в базу данных! :)", chat_id);
         }
@@ -62,8 +62,8 @@ public class AddMovieCommandResolver implements CommandResolver {
     
     
     
-    private void setState(Long chat_id, State state) {
-        Session session = SessionManager.getInstance().getSession(chat_id);
-        session.setState(state);
-    }
+    // private void setState(Long chat_id, State state) {
+    //     Session session = ;
+    //     session.setState(state);
+    // }
 }

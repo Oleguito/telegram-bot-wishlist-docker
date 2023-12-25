@@ -5,8 +5,8 @@ import model.entity.MovieEntity;
 import java.util.List;
 
 public interface MoviesRepo {
-
-    public void saveMovie(MovieEntity movieEntity);
+    
+    void saveMovie(MovieEntity movieEntity, Long chatID);
     
     List <MovieEntity> getMovies(Long chatID);
 }

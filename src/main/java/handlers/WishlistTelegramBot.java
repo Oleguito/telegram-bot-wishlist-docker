@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import resolvers.CommandResolver;
 import resolvers.impl.AddMovieCommandResolver;
+import resolvers.impl.FindMovieByTitleCommandResolver;
 import resolvers.impl.GetHistoryCommandResolver;
 import resolvers.impl.ShowAllAddedMoviesCommandResolver;
 import service.sessions.Session;
@@ -41,6 +42,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         this.resolvers.put("/add", new AddMovieCommandResolver());
         this.resolvers.put("/history", new GetHistoryCommandResolver());
         this.resolvers.put("/showall", new ShowAllAddedMoviesCommandResolver());
+        this.resolvers.put("/findbytitle", new FindMovieByTitleCommandResolver());
     }
 
     public void init() throws TelegramApiException {

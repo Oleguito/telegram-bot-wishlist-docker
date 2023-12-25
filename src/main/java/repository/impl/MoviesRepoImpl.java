@@ -20,9 +20,11 @@ public class MoviesRepoImpl implements MoviesRepo {
     }
     
     @Override
-    public void saveMovie(MovieEntity movieEntity) {
+    public void saveMovie(MovieEntity movieEntity, Long chatID) {
         try {
-            String query = "insert into movies (id, ref, title, year) values (?, ?, ?, ?)";
+            String query = """
+                    insert into movies (id, ref, title, year) values (?, ?, ?, ?)
+                    """;
             PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
             preparedStatement.setLong(1, movieEntity.getId());
             preparedStatement.setString(2, movieEntity.getRef());
@@ -30,7 +32,16 @@ public class MoviesRepoImpl implements MoviesRepo {
             preparedStatement.setInt(4, movieEntity.getYear());
             preparedStatement.execute();
             
+            query = """
+                    insert into users_movies (user_id, movie_id) values (?, ?)
+                    """;
+            preparedStatement = SQLUtils.getPreparedStatement(query, connection);
+            preparedStatement.setLong(1, chatID);
+            preparedStatement.setString(2, String.valueOf(movieEntity.getId()));
+            preparedStatement.execute();
+            
             preparedStatement.close();
+            
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }
