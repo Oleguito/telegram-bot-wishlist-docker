@@ -16,6 +16,16 @@ public class MovieEntity {
 //    private final byte[] picture;
     
     @Override
+    public String toString() {
+        return "MovieEntity{" +
+                "id=" + id +
+                ", ref='" + ref + '\'' +
+                ", title='" + title + '\'' +
+                ", year=" + year +
+                '}';
+    }
+    
+    @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }

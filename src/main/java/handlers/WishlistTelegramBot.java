@@ -3,6 +3,8 @@ package handlers;
 import buttons.ButtonGenerator;
 import commands.Commands;
 import commands.StartCommands;
+import model.db.DBManager;
+import model.entity.HistoryEntity;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,10 +17,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import resolvers.CommandResolver;
 import resolvers.impl.AddMovieCommandResolver;
+import resolvers.impl.GetHistoryCommandResolver;
 import service.sessions.Session;
 import service.sessions.SessionManager;
+import service.statemachine.State;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +38,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         super();
         this.resolvers = new HashMap<>();
         this.resolvers.put("/add", new AddMovieCommandResolver());
+        this.resolvers.put("/history", new GetHistoryCommandResolver());
     }
 
     public void init() throws TelegramApiException {
@@ -47,10 +54,12 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
 
             String callData = query.getData();
             Long chatID = query.getMessage().getChatId();
+            
+            SessionManager.getInstance().createSession(chatID);
+            
+            addCommandToHistoryDB(chatID, callData);
+            
             processCommand(callData, chatID, callData);
-
-//            SessionManager.getInstance().manageSession(callData, chatID);
-
         }
 
         /* Обработка сообщений пользователя */
@@ -61,12 +70,13 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             if (message.hasText()) {
                 var text = message.getText();
                 var chatID = message.getChatId();
-
+                
+                SessionManager.getInstance().createSession(chatID);
+                
+                addCommandToHistoryDB(chatID, text);
+                
                 if (text.startsWith("/start")) {
-
-                    // для текущего пользователя установить состояние на IDLE
-
-                    SessionManager.getInstance().createSession(chatID);
+                    SessionManager.getInstance().getSession(chatID).setState(State.IDLE);
                     greetingScreen(chatID);
                 } else {
                     Session session = SessionManager.getInstance().getSession(chatID);
@@ -77,7 +87,15 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         }
 
     }
-
+    
+    private static void addCommandToHistoryDB(Long chatID, String callData) {
+        DBManager.getInstance().getHistoryRepo().insert(HistoryEntity.builder()
+                .user_id(chatID)
+                .command(callData)
+                .operation_time(Timestamp.from(Instant.now()))
+                .build());
+    }
+    
     private void processCommand(String text, Long chatID, String resolverName) {
         CommandResolver commandResolver = resolvers.get(resolverName);
         commandResolver.resolveCommand(this, text, chatID);
