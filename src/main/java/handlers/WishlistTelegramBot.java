@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import resolvers.CommandResolver;
 import resolvers.impl.AddMovieCommandResolver;
 import resolvers.impl.GetHistoryCommandResolver;
+import resolvers.impl.ShowAllAddedMoviesCommandResolver;
 import service.sessions.Session;
 import service.sessions.SessionManager;
 import service.statemachine.State;
@@ -39,6 +40,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         this.resolvers = new HashMap<>();
         this.resolvers.put("/add", new AddMovieCommandResolver());
         this.resolvers.put("/history", new GetHistoryCommandResolver());
+        this.resolvers.put("/showall", new ShowAllAddedMoviesCommandResolver());
     }
 
     public void init() throws TelegramApiException {
