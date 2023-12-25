@@ -3,6 +3,7 @@ package handlers;
 import buttons.ButtonGenerator;
 import commands.Commands;
 import commands.StartCommands;
+import config.Configuration;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,13 +27,7 @@ import java.util.Map;
 
 public class WishlistTelegramBot extends TelegramLongPollingBot {
 
-    Map<String, CommandResolver> resolvers;
-
-    public WishlistTelegramBot() {
-        super();
-        this.resolvers = new HashMap<>();
-        this.resolvers.put("/add", new AddMovieCommandResolver());
-    }
+    Map<String, CommandResolver> resolvers = Configuration.resolvers;
 
     public void init() throws TelegramApiException {
         this.execute(new SetMyCommands(StartCommands.init(), new BotCommandScopeDefault(), null));
