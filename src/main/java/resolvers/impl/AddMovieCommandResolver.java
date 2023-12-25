@@ -46,6 +46,7 @@ public class AddMovieCommandResolver implements CommandResolver {
             
             moviesRepo.saveMovie(movie);
             setState(chat_id, State.IDLE);
+            
             sendMessage(tg_bot, "Фильм успешно добавлен в базу данных! :)", chat_id);
         }
 
