@@ -1,5 +1,6 @@
 import handlers.WishlistTelegramBot;
 import model.db.DBManager;
+import model.entity.MovieEntity;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import parsers.impl.ParserRepoImpl;
@@ -8,6 +9,7 @@ import repository.HistoryRepo;
 import repository.UserRepo;
 import repository.impl.MoviesRepoImpl;
 import repository.impl.UserRepoImpl;
+import utils.CookiesUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +26,13 @@ public class Main {
         UserRepo ur = new UserRepoImpl(dbmanager.getConnection());
         MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
         
+        
+        // var res = mr.getMovies();
+        
+        // var sexyCookies = new CookiesUtils();
+        
+        
+        // System.out.println("");
         // System.out.println(ur.getUsername(9876L));
         
         // /* https://www.kinopoisk.ru/film/476/ */
@@ -34,6 +43,7 @@ public class Main {
         //         .title("Назад в будущее")
         //         .year(1985)
         //         .build());
+        
         
         
         
