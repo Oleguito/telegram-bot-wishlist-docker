@@ -47,7 +47,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
     }
 
     public void init() throws TelegramApiException {
-        this.execute(new SetMyCommands(StartCommands.init(), new BotCommandScopeDefault(), null));
+        this.execute(ButtonGenerator.generateMenuButtons());
     }
 
     @Override
@@ -144,7 +144,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();
         for (var i : Commands.values()) {
-            buttonLines.add(List.of(ButtonGenerator.generateButton(i.getValue())));
+            buttonLines.add(List.of(ButtonGenerator.generateInlineButton(i.getValue())));
         }
 
         markupInline.setKeyboard(buttonLines);

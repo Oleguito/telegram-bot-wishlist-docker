@@ -36,8 +36,7 @@ public class DBManager {
         moviesRepo = new MoviesRepoImpl(connection);
         userRepo = new UserRepoImpl(connection);
         parserRepo = new ParserRepoImpl();
-        
-        log.info("DBManager created");
+
     }
 
     public static DBManager getInstance() {
