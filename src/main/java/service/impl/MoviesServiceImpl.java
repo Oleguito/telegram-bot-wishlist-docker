@@ -14,7 +14,12 @@ public class MoviesServiceImpl implements MoviesService {
     }
 
     @Override
+
+    public void saveMovie(MovieEntity movieEntity, Long chatID) {
+        moviesRepo.saveMovie(movieEntity, chatID);
+
     public void saveMovie(MovieEntity movieEntity, Long chat_id) {
         moviesRepo.saveMovie(movieEntity, chat_id);
+
     }
 }

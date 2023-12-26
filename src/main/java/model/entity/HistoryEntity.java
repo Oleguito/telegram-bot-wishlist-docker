@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class HistoryEntity {
 
     private long id;
-    private int user_id;
+    private long user_id;
     private String command;
     private Timestamp operation_time;
 

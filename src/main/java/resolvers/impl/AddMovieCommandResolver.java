@@ -15,7 +15,13 @@ import service.impl.MoviesServiceImpl;
 import service.sessions.Session;
 import service.sessions.SessionManager;
 import service.statemachine.State;
+
+import utils.TelegramBotUtils;
+
+import java.util.List;
+
 import utils.TGUtils;
+
 
 public class AddMovieCommandResolver implements CommandResolver {
 
@@ -25,12 +31,14 @@ public class AddMovieCommandResolver implements CommandResolver {
 
     public AddMovieCommandResolver() {
         this.parserRepo = new ParserRepoImpl();
+
         this.moviesService = new MoviesServiceImpl();
     }
 
     @Override
     public String getCommandName() {
         return COMMAND_NAME;
+
     }
 
     @Override
@@ -52,8 +60,4 @@ public class AddMovieCommandResolver implements CommandResolver {
 
     }
 
-    private void setState(Long chat_id, State state) {
-        Session session = SessionManager.getInstance().getSession(chat_id);
-        session.setState(state);
-    }
 }

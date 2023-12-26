@@ -3,7 +3,12 @@ package handlers;
 import buttons.ButtonGenerator;
 import commands.Commands;
 import commands.StartCommands;
+import model.db.DBManager;
+import model.entity.HistoryEntity;
+import model.entity.UserEntity;
+
 import config.Configuration;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,10 +21,16 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import resolvers.CommandResolver;
 import resolvers.impl.AddMovieCommandResolver;
+import resolvers.impl.FindMovieByTitleCommandResolver;
+import resolvers.impl.GetHistoryCommandResolver;
+import resolvers.impl.ShowAllAddedMoviesCommandResolver;
 import service.sessions.Session;
 import service.sessions.SessionManager;
+import service.statemachine.State;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,22 +41,30 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
     Map<String, CommandResolver> resolvers = Configuration.resolvers;
 
     public void init() throws TelegramApiException {
-        this.execute(new SetMyCommands(StartCommands.init(), new BotCommandScopeDefault(), null));
+        this.execute(ButtonGenerator.generateMenuButtons());
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-
+        
         /* Обработка кнопок */
         if (update.hasCallbackQuery()) {
             var query = update.getCallbackQuery();
-
+            
             String callData = query.getData();
             Long chatID = query.getMessage().getChatId();
+            
+            String username = query.getMessage().getForwardSenderName();
+            addUserToDatabaseIfHesNotThere(chatID, username);
+            
+            SessionManager.getInstance().createSession(chatID);
+            
+            addCommandToHistoryDB(chatID, callData);
+            
             processCommand(callData, chatID, callData);
-
-//            SessionManager.getInstance().manageSession(callData, chatID);
-
+            if(SessionManager.getInstance().getSession(chatID).getState() == State.IDLE) {
+                greetingScreen(chatID);
+            }
         }
 
         /* Обработка сообщений пользователя */
@@ -56,23 +75,52 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             if (message.hasText()) {
                 var text = message.getText();
                 var chatID = message.getChatId();
-
+                
+                String username = message.getForwardSenderName();
+                addUserToDatabaseIfHesNotThere(chatID, username);
+                
+                SessionManager.getInstance().createSession(chatID);
+                
+                addCommandToHistoryDB(chatID, text);
+                
                 if (text.startsWith("/start")) {
-
-                    // для текущего пользователя установить состояние на IDLE
-
-                    SessionManager.getInstance().createSession(chatID);
+                    SessionManager.getInstance().getSession(chatID).setState(State.IDLE);
                     greetingScreen(chatID);
                 } else {
                     Session session = SessionManager.getInstance().getSession(chatID);
                     String resolverName = session.getState().getValue();
                     processCommand(text, chatID, resolverName);
+                    if(SessionManager.getInstance().getSession(chatID).getState() == State.IDLE) {
+                        greetingScreen(chatID);
+                    }
                 }
             }
         }
 
     }
-
+    
+    private static void addUserToDatabaseIfHesNotThere(Long chatID, String username) {
+        if(userID_NotFound_InDB(chatID)) {
+            DBManager.getInstance().getUserRepo().saveUser(UserEntity.builder()
+                            .id(chatID)
+                            .username(username)
+                    .build());
+        }
+        
+    }
+    
+    private static boolean userID_NotFound_InDB(Long chatID) {
+        return DBManager.getInstance().getUserRepo().getUsername(chatID).isEmpty();
+    }
+    
+    private static void addCommandToHistoryDB(Long chatID, String callData) {
+        DBManager.getInstance().getHistoryRepo().insert(HistoryEntity.builder()
+                .user_id(chatID)
+                .command(callData)
+                .operation_time(Timestamp.from(Instant.now()))
+                .build());
+    }
+    
     private void processCommand(String text, Long chatID, String resolverName) {
         CommandResolver commandResolver = resolvers.get(resolverName);
         commandResolver.resolveCommand(this, text, chatID);
@@ -90,7 +138,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();
         for (var i : Commands.values()) {
-            buttonLines.add(List.of(ButtonGenerator.generateButton(i.getValue())));
+            buttonLines.add(List.of(ButtonGenerator.generateInlineButton(i.getValue())));
         }
 
         markupInline.setKeyboard(buttonLines);
@@ -125,7 +173,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             // Execute the method
             execute(sendPhotoRequest);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            throw new RuntimeException("ГОРИМ!!!", e);
         }
     }
 
