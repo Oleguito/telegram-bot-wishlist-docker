@@ -59,5 +59,9 @@ public class AddMovieCommandResolver implements CommandResolver {
         }
 
     }
-
+    
+    private void setState(Long chatId, State state) {
+        SessionManager.getInstance().getSession(chatId).setState(state);
+    }
+    
 }
