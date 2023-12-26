@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 public class GetHistoryCommandResolver implements CommandResolver {
     
     private final HistoryRepo historyRepo;
-    
+    private final String COMMAND_NAME = "/history";
+
     public GetHistoryCommandResolver() {
         historyRepo = DBManager.getInstance().getHistoryRepo();
     }
@@ -36,4 +37,8 @@ public class GetHistoryCommandResolver implements CommandResolver {
         }
     }
 
+    @Override
+    public String getCommandName() {
+        return COMMAND_NAME;
+    }
 }
