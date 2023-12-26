@@ -33,7 +33,7 @@ public class Configuration {
                     return null;
                 }).collect(Collectors.toList());
 
-        List<? extends Class<?>> filteredClasses = allClasses.parallelStream()
+        List<? extends Class<?>> filteredClasses = allClasses.stream()
                 .filter(elem -> Arrays.stream(elem.getInterfaces()).parallel().filter(iface -> Objects.equals(iface, CommandResolver.class)).count() > 0)
                 .collect(Collectors.toList());
 
