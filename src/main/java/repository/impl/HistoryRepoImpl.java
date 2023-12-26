@@ -24,7 +24,7 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
         try {
             String query = "insert into history (user_id, command, operation_time) values (?, ?, ?)";
             PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
-            preparedStatement.setInt(1, historyEntity.getUser_id());
+            preparedStatement.setLong(1, historyEntity.getUser_id());
             preparedStatement.setString(2, historyEntity.getCommand());
             preparedStatement.setTimestamp(3, historyEntity.getOperation_time());
             preparedStatement.execute();

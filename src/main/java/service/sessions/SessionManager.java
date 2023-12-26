@@ -9,7 +9,11 @@ import java.util.Map;
 public class SessionManager {
     
     static SessionManager instance = null;
-    private Map<Long, Session> userToSession = new HashMap<>();
+    private Map<Long, Session> userToSession;
+    
+    public SessionManager() {
+        this.userToSession = new HashMap<>();
+    }
     
     public static SessionManager getInstance() {
         if(instance == null) {
@@ -32,6 +36,7 @@ public class SessionManager {
     }
     
     public void createSession(Long chatID) {
+        if(userToSession.containsKey(chatID)) return;
         userToSession.put(chatID,
                 Session.builder()
                         .sessionID(chatID)
