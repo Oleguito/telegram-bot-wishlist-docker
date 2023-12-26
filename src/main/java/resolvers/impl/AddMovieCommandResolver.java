@@ -1,5 +1,6 @@
 package resolvers.impl;
 
+import lombok.Getter;
 import model.db.DBManager;
 import model.entity.MovieEntity;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -9,61 +10,54 @@ import parsers.ParserRepo;
 import parsers.impl.ParserRepoImpl;
 import repository.MoviesRepo;
 import resolvers.CommandResolver;
+import service.MoviesService;
+import service.impl.MoviesServiceImpl;
 import service.sessions.Session;
 import service.sessions.SessionManager;
 import service.statemachine.State;
+
 import utils.TelegramBotUtils;
 
 import java.util.List;
 
+import utils.TGUtils;
+
+
 public class AddMovieCommandResolver implements CommandResolver {
 
     private final ParserRepo parserRepo;
-    private final MoviesRepo moviesRepo;
+    private final MoviesService moviesService;
+    private final String COMMAND_NAME = "/add";
 
     public AddMovieCommandResolver() {
         this.parserRepo = new ParserRepoImpl();
-        this.moviesRepo = DBManager.getInstance().getMoviesRepo();
-        
+
+        this.moviesService = new MoviesServiceImpl();
+    }
+
+    @Override
+    public String getCommandName() {
+        return COMMAND_NAME;
+
     }
 
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chat_id) {
 
         if (text.startsWith("/add")) {
-            TelegramBotUtils.sendMessage(tg_bot, "Введите ссылку на фильм с кинопоиска", chat_id);
-            
-            SessionManager.getInstance().getSession(chat_id).setState(State.ADD);
+            try {
+                TGUtils.sendMessage(tg_bot, text, chat_id);
+                setState(chat_id, State.ADD);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
 
         } else {
-            
             MovieEntity movie = parserRepo.parse(text);
-            List <MovieEntity> movies = moviesRepo.getMovies(chat_id);
-            
-            if(contains(movies, movie)) {
-                TelegramBotUtils.sendMessage(tg_bot, "Этот фильм уже есть в базе данных! :)", chat_id);
-                return;
-            }
-            
-            moviesRepo.saveMovie(movie, chat_id);
-            SessionManager.getInstance().getSession(chat_id).setState(State.IDLE);
-            
-            TelegramBotUtils.sendMessage(tg_bot, "Фильм успешно добавлен в базу данных! :)", chat_id);
+            moviesService.saveMovie(movie, chat_id);
+            setState(chat_id, State.IDLE);
         }
 
     }
-    
-    private boolean contains(List <MovieEntity> movies, MovieEntity movie) {
-        for(var m : movies) {
-            if(m.equals(movie)) return true;
-        }
-        return false;
-    }
-    
-    
-    
-    // private void setState(Long chat_id, State state) {
-    //     Session session = ;
-    //     session.setState(state);
-    // }
+
 }
