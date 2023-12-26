@@ -32,28 +32,20 @@ public class MoviesRepoImpl implements MoviesRepo {
             preparedStatement.setInt(4, movieEntity.getYear());
             preparedStatement.setLong(5, chat_id);
             preparedStatement.execute();
-            
-            query = """
-                    insert into users_movies (user_id, movie_id) values (?, ?)
-                    """;
-            preparedStatement = SQLUtils.getPreparedStatement(query, connection);
-            preparedStatement.setLong(1, chatID);
-            preparedStatement.setString(2, String.valueOf(movieEntity.getId()));
-            preparedStatement.execute();
-            
+
             preparedStatement.close();
             
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }
     }
-    
+
     @Override
     public List<MovieEntity> getMovies(Long chatID) {
         try {
-            
+
             List<MovieEntity> result = new ArrayList <>();
-            
+
             String query = """
                     select *
                     from movies
@@ -63,11 +55,11 @@ public class MoviesRepoImpl implements MoviesRepo {
             PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
             preparedStatement.setLong(1, chatID);
             var resultSet = preparedStatement.executeQuery();
-            
+
             if(!resultSet.isBeforeFirst()) {
                 return Collections.emptyList();
             }
-            
+
             while(resultSet.next()) {
                 result.add(MovieEntity.builder()
                         .id(resultSet.getLong("id"))
@@ -76,12 +68,12 @@ public class MoviesRepoImpl implements MoviesRepo {
                         .year(resultSet.getInt("year"))
                         .build());
             }
-            
+
             preparedStatement.close();
             resultSet.close();
-            
+
             return result;
-            
+
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }

@@ -10,8 +10,9 @@ import utils.TelegramBotUtils;
 import java.util.stream.Collectors;
 
 public class FindMovieByTitleCommandResolver implements CommandResolver {
-    
-    
+
+    private final String COMMAND_NAME = "/findbytitle";
+
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chat_id) {
         if(text.startsWith("/findbytitle")) {
@@ -28,5 +29,10 @@ public class FindMovieByTitleCommandResolver implements CommandResolver {
             TelegramBotUtils.sendMessage(tg_bot,to,chat_id);
             SessionManager.getInstance().getSession(chat_id).setState(State.IDLE);
         }
+    }
+
+    @Override
+    public String getCommandName() {
+        return COMMAND_NAME;
     }
 }
