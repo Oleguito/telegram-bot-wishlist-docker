@@ -31,7 +31,6 @@ public class UserRepoImpl implements UserRepo {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }
     }
-
     
     @Override
     public Optional <String> getUsername(long userId) {
@@ -44,11 +43,12 @@ public class UserRepoImpl implements UserRepo {
                 return Optional.empty();
             }
             resultSet.next();
-            
+            Optional<String> username = Optional.ofNullable(resultSet.getString("username"));
+
             resultSet.close();
             preparedStatement.close();
             
-            return Optional.of(resultSet.getString("username"));
+            return username;
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }

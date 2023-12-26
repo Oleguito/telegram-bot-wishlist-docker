@@ -53,8 +53,8 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             
             String callData = query.getData();
             Long chatID = query.getMessage().getChatId();
-            
-            String username = query.getMessage().getForwardSenderName();
+
+            String username = update.getMessage().getChat().getUserName();
             addUserToDatabaseIfHesNotThere(chatID, username);
             
             SessionManager.getInstance().createSession(chatID);
@@ -76,7 +76,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
                 var text = message.getText();
                 var chatID = message.getChatId();
                 
-                String username = message.getForwardSenderName();
+                String username = message.getChat().getUserName();
                 addUserToDatabaseIfHesNotThere(chatID, username);
                 
                 SessionManager.getInstance().createSession(chatID);
