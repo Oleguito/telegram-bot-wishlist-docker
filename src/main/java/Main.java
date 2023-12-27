@@ -14,6 +14,8 @@ import repository.HistoryRepo;
 import repository.UserRepo;
 import repository.impl.MoviesRepoImpl;
 import repository.impl.UserRepoImpl;
+import service.impl.MoviesServiceImpl;
+import stubs.MovieEntityStub;
 import utils.CookiesUtils;
 
 import java.io.IOException;
@@ -37,6 +39,15 @@ public class Main {
         HistoryRepo historyRepo = dbmanager.getHistoryRepo();
         UserRepo ur = new UserRepoImpl(dbmanager.getConnection());
         MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
+        
+        
+        var service = new MoviesServiceImpl();
+        service.saveMovie(MovieEntityStub.getNewMovieEntityStub(1), 646014498L);
+        // service.saveMovie(MovieEntityStub.getNewMovieEntityStub(2), 1337L);
+        
+        // service.deleteAllMoviesOfUserFromDatabase(1337L);
+        
+        
         
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);

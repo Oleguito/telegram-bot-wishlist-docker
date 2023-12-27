@@ -28,4 +28,9 @@ public class MoviesServiceImpl implements MoviesService {
     public boolean movieRegisteredInUsersMovies(MovieEntity movie, Long chatId) {
         return usersMoviesRepo.movieRegistered(movie,chatId);
     }
+    
+    @Override
+    public void deleteAllMoviesOfUserFromDatabase(Long chatId) {
+        usersMoviesRepo.deleteMoviesOfUser(chatId);
+    }
 }

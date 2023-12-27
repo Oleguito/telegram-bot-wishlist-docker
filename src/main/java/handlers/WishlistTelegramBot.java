@@ -27,6 +27,7 @@ import resolvers.impl.ShowAllAddedMoviesCommandResolver;
 import service.sessions.Session;
 import service.sessions.SessionManager;
 import service.statemachine.State;
+import utils.TelegramBotUtils;
 
 import java.io.File;
 import java.sql.Timestamp;
@@ -148,9 +149,8 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
     }
 
     private void greetingScreen(Long chat_id) {
-        // sendMessage(message.getText(), message.getChatId().toString());
 
-        sendImageUploadingAFile("src/main/resources/shredder.jpg", chat_id.toString());
+        TelegramBotUtils.sendImage(this,"src/main/resources/shredder.jpg", chat_id);
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat_id);
@@ -183,20 +183,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendImageUploadingAFile(String filePath, String chatId) {
-        // Create send method
-        SendPhoto sendPhotoRequest = new SendPhoto();
-        // Set destination chat id
-        sendPhotoRequest.setChatId(chatId);
-        // Set the photo file as a new photo (You can also use InputStream with a constructor overload)
-        sendPhotoRequest.setPhoto(new InputFile(new File(filePath)));
-        try {
-            // Execute the method
-            execute(sendPhotoRequest);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException("ГОРИМ!!!", e);
-        }
-    }
+    
 
     @Override
     public String getBotUsername() {

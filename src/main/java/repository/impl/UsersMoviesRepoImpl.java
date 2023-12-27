@@ -39,4 +39,25 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
         }
          return result;
     }
+    
+    @Override
+    public void deleteMoviesOfUser(Long chatId) {
+        try {
+         
+            String query = """
+                    delete from users_movies
+                    where user_id = ?
+                    """;
+
+            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
+            preparedStatement.setLong(1, chatId);
+            preparedStatement.execute();
+            
+            preparedStatement.close();
+            
+        } catch (SQLException e) {
+            throw new RuntimeException("Произошла ошибка выполнения запроса", e);
+        }
+        
+    }
 }
