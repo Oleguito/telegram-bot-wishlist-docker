@@ -12,7 +12,7 @@ public class TelegramBotUtils {
         try {
             tg_bot.execute(sendMessage);
         } catch (TelegramApiException e) {
-            throw new RuntimeException("Не удалось выпендриться");
+            throw new RuntimeException("Не удалось выпендриться", e);
         }
     }
 }
