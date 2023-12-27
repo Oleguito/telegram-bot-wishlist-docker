@@ -4,12 +4,9 @@ import model.entity.MovieEntity;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import parsers.ParserRepo;
+import parsers.Parser;
 import utils.CookiesUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -17,7 +14,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public class ParserRepoImpl implements ParserRepo {
+public class KinopoiskParser implements Parser {
     
     @Override
     public MovieEntity parse(String reference) {

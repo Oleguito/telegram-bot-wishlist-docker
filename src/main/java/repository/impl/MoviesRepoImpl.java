@@ -22,7 +22,6 @@ public class MoviesRepoImpl implements MoviesRepo {
     @Override
     public void saveMovie(MovieEntity movieEntity, Long chat_id) {
         try {
-//            String query = "insert into movies (id, ref, title, year) values (?, ?, ?, ?)";
             String query = "call save_film(?, ?, ?, ?, ?)";
 
             PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);

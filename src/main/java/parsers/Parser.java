@@ -2,6 +2,6 @@ package parsers;
 
 import model.entity.MovieEntity;
 
-public interface ParserRepo {
+public interface Parser {
     MovieEntity parse(String reference);
 }

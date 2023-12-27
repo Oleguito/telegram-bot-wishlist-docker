@@ -14,6 +14,8 @@ import repository.HistoryRepo;
 import repository.UserRepo;
 import repository.impl.MoviesRepoImpl;
 import repository.impl.UserRepoImpl;
+import service.impl.MoviesServiceImpl;
+import stubs.MovieEntityStub;
 import utils.CookiesUtils;
 
 import java.io.IOException;
@@ -39,6 +41,13 @@ public class Main {
         MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
         
         
+        var service = new MoviesServiceImpl();
+        service.saveMovie(MovieEntityStub.getNewMovieEntityStub(1), 646014498L);
+        // service.saveMovie(MovieEntityStub.getNewMovieEntityStub(2), 1337L);
+        
+        // service.deleteAllMoviesOfUserFromDatabase(1337L);
+        
+        
         
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -46,8 +55,7 @@ public class Main {
             telegramBotsApi.registerBot(bot);
             bot.init();
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw new RuntimeException("Телеграм бот API в main()");
         }
         
     }
