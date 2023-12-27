@@ -54,15 +54,15 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             String callData = query.getData();
             Long chatID = query.getMessage().getChatId();
 
-            String username = update.getMessage().getChat().getUserName();
+            String username = getUserNameFromCallBackQuery(update);
             addUserToDatabaseIfHesNotThere(chatID, username);
             
-            SessionManager.getInstance().createSession(chatID);
+            createSessionForThisUser(chatID);
             
             addCommandToHistoryDB(chatID, callData);
             
             processCommand(callData, chatID, callData);
-            if(SessionManager.getInstance().getSession(chatID).getState() == State.IDLE) {
+            if(getUserState(chatID) == State.IDLE) {
                 greetingScreen(chatID);
             }
         }
@@ -79,16 +79,15 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
                 String username = message.getChat().getUserName();
                 addUserToDatabaseIfHesNotThere(chatID, username);
                 
-                SessionManager.getInstance().createSession(chatID);
+                createSessionForThisUser(chatID);
                 
                 addCommandToHistoryDB(chatID, text);
                 
                 if (text.startsWith("/start")) {
-                    SessionManager.getInstance().getSession(chatID).setState(State.IDLE);
+                    setSessionStateForThisUser(chatID, State.IDLE);
                     greetingScreen(chatID);
                 } else {
-                    Session session = SessionManager.getInstance().getSession(chatID);
-                    String resolverName = session.getState().getValue();
+                    String resolverName = getResolverName(chatID);
                     processCommand(text, chatID, resolverName);
                     if(SessionManager.getInstance().getSession(chatID).getState() == State.IDLE) {
                         greetingScreen(chatID);
@@ -97,6 +96,28 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             }
         }
 
+    }
+    
+    private static String getResolverName(Long chatID) {
+        Session session = SessionManager.getInstance().getSession(chatID);
+        String resolverName = session.getState().getValue();
+        return resolverName;
+    }
+    
+    private static void setSessionStateForThisUser(Long chatID, State state) {
+        SessionManager.getInstance().getSession(chatID).setState(state);
+    }
+    
+    private static State getUserState(Long chatID) {
+        return SessionManager.getInstance().getSession(chatID).getState();
+    }
+    
+    private static void createSessionForThisUser(Long chatID) {
+        SessionManager.getInstance().createSession(chatID);
+    }
+    
+    private static String getUserNameFromCallBackQuery(Update update) {
+        return update.getCallbackQuery().getFrom().getUserName();
     }
     
     private static void addUserToDatabaseIfHesNotThere(Long chatID, String username) {
@@ -133,7 +154,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat_id);
-        sendMessage.setText("Сделайте выбор");
+        sendMessage.setText("Сделайте выбор 😉");
 
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();

@@ -2,12 +2,7 @@ package resolvers.impl;
 
 import model.db.DBManager;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import parsers.ParserRepo;
-import parsers.impl.ParserRepoImpl;
 import repository.HistoryRepo;
-import repository.MoviesRepo;
 import resolvers.CommandResolver;
 import service.sessions.SessionManager;
 import service.statemachine.State;

@@ -38,16 +38,13 @@ public class Main {
         UserRepo ur = new UserRepoImpl(dbmanager.getConnection());
         MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
         
-        
-        
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             WishlistTelegramBot bot = new WishlistTelegramBot();
             telegramBotsApi.registerBot(bot);
             bot.init();
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw new RuntimeException("Телеграм бот API в main()");
         }
         
     }

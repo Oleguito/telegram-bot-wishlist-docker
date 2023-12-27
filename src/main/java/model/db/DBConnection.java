@@ -20,8 +20,10 @@ public class DBConnection {
     private DBConnection() {
         
         try {
-            connection = DriverManager.getConnection(System.getenv("DB_URL"),
-                    "pavelioleg_user", "12345");
+            connection = DriverManager.getConnection(
+                    System.getenv("DB_URL"),
+                    System.getenv("DB_USERNAME"),
+                    System.getenv("DB_PASSWORD"));
         } catch (Exception e) {
             throw new RuntimeException("Произошла ошибка при подключении к БД. Подробности: " + e.getMessage());
         }

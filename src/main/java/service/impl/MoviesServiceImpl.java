@@ -19,4 +19,9 @@ public class MoviesServiceImpl implements MoviesService {
         moviesRepo.saveMovie(movieEntity, chat_id);
 
     }
+    
+    @Override
+    public boolean movieRegisteredInUsersMovies(MovieEntity movie, Long chatId) {
+        return false;
+    }
 }
