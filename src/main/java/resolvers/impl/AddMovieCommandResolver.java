@@ -55,6 +55,8 @@ public class AddMovieCommandResolver implements CommandResolver {
                 TelegramBotUtils.sendMessage(tg_bot, """
                     Такое кино вы уже добавляли!)
                     """, chat_id);
+                setState(chat_id, State.IDLE);
+                return;
             }
             
             moviesService.saveMovie(movie, chat_id);
