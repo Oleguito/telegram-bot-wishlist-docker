@@ -20,7 +20,7 @@ public class ClearAllAddedMoviesCommandResolver implements CommandResolver {
             moviesService.deleteAllMoviesOfUserFromDatabase(chat_id);
             
             TelegramBotUtils.sendImage(tg_bot,
-                    "src/main/resources/misterProper.png", chat_id);
+                    "src/main/resources/mister-proper.png", chat_id);
             
             TelegramBotUtils.sendMessage(tg_bot, """
                     Чисто!
