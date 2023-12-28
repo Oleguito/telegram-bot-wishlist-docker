@@ -150,7 +150,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
 
     private void greetingScreen(Long chat_id) {
 
-        TelegramBotUtils.sendImage(this,"src/main/resources/shredder.jpg", chat_id);
+        TelegramBotUtils.sendImage(this,"src/main/resources/logo.jpg", chat_id);
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat_id);
