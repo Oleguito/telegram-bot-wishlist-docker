@@ -10,6 +10,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+    private static UserService instance;
 
     public UserServiceImpl() {
         this.userRepo = DBManager.getInstance().getUserRepo();
@@ -24,4 +25,13 @@ public class UserServiceImpl implements UserService {
     public Optional<String> getUsername(long user_id) {
         return userRepo.getUsername(user_id);
     }
+
+    public static UserService getInstance() {
+        if (instance == null) {
+            instance = new UserServiceImpl();
+        }
+        return instance;
+    }
+
+
 }

@@ -1,6 +1,5 @@
 package service.impl;
 
-import model.db.DBConnection;
 import model.db.DBManager;
 import model.entity.HistoryEntity;
 import repository.HistoryRepo;
@@ -10,6 +9,7 @@ import java.util.List;
 
 public class HistoryServiceImpl implements HistoryService {
 
+    private static HistoryService instance;
     private final HistoryRepo historyRepo;
 
     public HistoryServiceImpl() {
@@ -30,4 +30,12 @@ public class HistoryServiceImpl implements HistoryService {
     public List<HistoryEntity> getUserHistory(Long user_id) {
         return historyRepo.select(user_id);
     }
+
+    public static HistoryService getInstance() {
+        if (instance == null) {
+            instance = new HistoryServiceImpl();
+        }
+        return instance;
+    }
+
 }

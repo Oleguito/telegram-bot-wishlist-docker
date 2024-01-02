@@ -52,7 +52,6 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
                 .id(chatID)
                 .username(username)
                 .build());
-
     }
 
     private static void addCommandToHistoryDB(Long chatID, String callData) {
@@ -78,11 +77,11 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             Long chatID = query.getMessage().getChatId();
 
             String username = update.getCallbackQuery().getFrom().getUserName();
-            addUserToDatabaseIfHesNotThere(chatID, username); // TODO: вынести в прокси
+//            addUserToDatabaseIfHesNotThere(chatID, username); // TODO: вынести в прокси
 
             createSessionForThisUser(chatID);
 
-            addCommandToHistoryDB(chatID, callData); // TODO: вынести в прокси
+//            addCommandToHistoryDB(chatID, callData); // TODO: вынести в прокси
 
             processCommand(callData, chatID, callData);
             if (getUserState(chatID) == State.IDLE) {
@@ -100,11 +99,11 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
                 var chatID = message.getChatId();
 
                 String username = message.getChat().getUserName();
-                addUserToDatabaseIfHesNotThere(chatID, username); // TODO: вынести в прокси
+//                addUserToDatabaseIfHesNotThere(chatID, username); // TODO: вынести в прокси
 
                 createSessionForThisUser(chatID);
 
-                addCommandToHistoryDB(chatID, text); // TODO: вынести в прокси
+//                addCommandToHistoryDB(chatID, text); // TODO: вынести в прокси
 
                 if (text.startsWith("/start")) {
                     setSessionStateForThisUser(chatID, State.IDLE);
