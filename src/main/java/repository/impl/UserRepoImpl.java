@@ -20,7 +20,7 @@ public class UserRepoImpl implements UserRepo {
     @Override
     public void saveUser(UserEntity userEntity) {
         try {
-            String query = "insert into users (id, username) values (?, ?)";
+            String query = "call save_user(?, ?)";
             PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
             preparedStatement.setLong(1, userEntity.getId());
             preparedStatement.setString(2, userEntity.getUsername());

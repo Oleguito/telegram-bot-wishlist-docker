@@ -34,15 +34,15 @@ import java.util.stream.Stream;
 @Slf4j
 public class Main {
     public static void main(String[] args) throws IOException {
-        var dbmanager = DBManager.getInstance();
-        
-        HistoryRepo historyRepo = dbmanager.getHistoryRepo();
-        UserRepo ur = new UserRepoImpl(dbmanager.getConnection());
-        MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
-        
-        
-        var service = new MoviesServiceImpl();
-        service.saveMovie(MovieEntityStub.getNewMovieEntityStub(1), 646014498L);
+//        var dbmanager = DBManager.getInstance();
+//
+//        HistoryRepo historyRepo = dbmanager.getHistoryRepo();
+//        UserRepo ur = new UserRepoImpl(dbmanager.getConnection());
+//        MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
+//
+//
+//        var service = new MoviesServiceImpl();
+//        service.saveMovie(MovieEntityStub.getNewMovieEntityStub(1), 646014498L);
         // service.saveMovie(MovieEntityStub.getNewMovieEntityStub(2), 1337L);
         
         // service.deleteAllMoviesOfUserFromDatabase(1337L);

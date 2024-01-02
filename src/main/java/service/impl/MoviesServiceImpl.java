@@ -6,6 +6,8 @@ import repository.MoviesRepo;
 import repository.UsersMoviesRepo;
 import service.MoviesService;
 
+import java.util.List;
+
 public class MoviesServiceImpl implements MoviesService {
 
     private final MoviesRepo moviesRepo;
@@ -32,5 +34,10 @@ public class MoviesServiceImpl implements MoviesService {
     @Override
     public void deleteAllMoviesOfUserFromDatabase(Long chatId) {
         usersMoviesRepo.deleteMoviesOfUser(chatId);
+    }
+
+    @Override
+    public List<MovieEntity> getMovies(Long chat_id) {
+        return moviesRepo.getMovies(chat_id);
     }
 }
