@@ -77,8 +77,7 @@ public class KinopoiskParser implements Parser {
             var path = reference.substring(idx);
             
             var sexyCookies = new CookiesUtils();
-            
-            
+
             var doc = Jsoup.connect(reference)
                     .headers(sexyCookies.headersBefore)
                     .headers(sexyCookies.headersAfter)

@@ -39,7 +39,7 @@ public class AddMovieCommandResolver implements CommandResolver {
             setState(chat_id, State.ADD);
         } else {
             
-            if(!text.matches("https://www.kinopoisk.ru/film/\\d+[/]*")) {
+            if(!text.matches("https:\\/\\/www.kinopoisk.ru\\/[a-zA-Z+]+\\/\\d+[\\/]*")) {
                 TelegramBotUtils.sendMessage(tg_bot, """
                         Не похоже на ссылку с кинопоиска :)
                         """, chat_id);
@@ -51,7 +51,7 @@ public class AddMovieCommandResolver implements CommandResolver {
             
             MovieEntity movie = parser.parse(text);
             
-            if(movieAlreadyRegisteredInUsersMoviesDB(movie, chat_id)) {
+            if(movieAlreadyRegisteredInUsersMoviesDB(movie, chat_id)) { //TODO: это реализовано в процедуре save_film
                 TelegramBotUtils.sendMessage(tg_bot, """
                     Такое кино вы уже добавляли!)
                     """, chat_id);

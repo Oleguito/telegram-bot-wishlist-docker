@@ -1,62 +1,106 @@
 import handlers.WishlistTelegramBot;
 import lombok.extern.slf4j.Slf4j;
-import model.db.DBConnection;
-import model.db.DBManager;
-import model.entity.MovieEntity;
-import org.slf4j.ILoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.spi.LoggerFactoryBinder;
+import model.entity.HistoryEntity;
+import model.entity.UserEntity;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import repository.MoviesRepo;
-import repository.HistoryRepo;
-import repository.UserRepo;
-import repository.impl.MoviesRepoImpl;
-import repository.impl.UserRepoImpl;
-import service.impl.MoviesServiceImpl;
-import stubs.MovieEntityStub;
-import utils.CookiesUtils;
+import service.HistoryService;
+import service.impl.HistoryServiceImpl;
+import service.impl.UserServiceImpl;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ServiceLoader;
-import java.io.*;
+import java.lang.reflect.Proxy;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Slf4j
 public class Main {
+
+    private final HistoryService historyService = new HistoryServiceImpl();
+
     public static void main(String[] args) throws IOException {
-        var dbmanager = DBManager.getInstance();
-        
-        HistoryRepo historyRepo = dbmanager.getHistoryRepo();
-        UserRepo ur = new UserRepoImpl(dbmanager.getConnection());
-        MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
-        
-        
-        var service = new MoviesServiceImpl();
-        service.saveMovie(MovieEntityStub.getNewMovieEntityStub(1), 646014498L);
+//        var dbmanager = DBManager.getInstance();
+//
+//        HistoryRepo historyRepo = dbmanager.getHistoryRepo();
+//        UserRepo ur = new UserRepoImpl(dbmanager.getConnection());
+//        MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
+//
+//
+//        var service = new MoviesServiceImpl();
+//        service.saveMovie(MovieEntityStub.getNewMovieEntityStub(1), 646014498L);
         // service.saveMovie(MovieEntityStub.getNewMovieEntityStub(2), 1337L);
-        
+
         // service.deleteAllMoviesOfUserFromDatabase(1337L);
-        
-        
-        
+
+        WishlistTelegramBot bot = new WishlistTelegramBot();
+        LongPollingBot botProxy = createBotProxy(bot);
+
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            WishlistTelegramBot bot = new WishlistTelegramBot();
-            telegramBotsApi.registerBot(bot);
+            telegramBotsApi.registerBot(botProxy);
             bot.init();
         } catch (Exception e) {
             throw new RuntimeException("Телеграм бот API в main()");
         }
-        
+
+    }
+
+    private static LongPollingBot createBotProxy(WishlistTelegramBot bot) {
+        LongPollingBot botProxy = (LongPollingBot) Proxy.newProxyInstance(WishlistTelegramBot.class.getClassLoader(),
+                WishlistTelegramBot.class.getSuperclass().getInterfaces(),
+                (proxy, method, args1) -> {
+                    if (method.getName().equals("onUpdatesReceived")) {
+                        List<Update> updates = (List<Update>) args1[0];
+                        for (Update update : updates) {
+                            if (update.hasCallbackQuery()) {
+                                var query = update.getCallbackQuery();
+
+                                String callData = query.getData();
+                                Long chatID = query.getMessage().getChatId();
+                                String username = update.getCallbackQuery().getFrom().getUserName();
+
+                                saveUser(chatID, username);
+                                saveHistory(chatID, callData);
+
+                            }
+
+                            if (update.hasMessage()) {
+
+                                var message = update.getMessage();
+
+                                if (message.hasText()) {
+                                    var text = message.getText();
+                                    var chatID = message.getChatId();
+
+                                    String username = message.getChat().getUserName();
+                                    saveUser(chatID, username);
+                                    saveHistory(chatID, text);
+
+                                }
+                            }
+                        }
+                    }
+                    return method.invoke(bot, args1);
+                });
+        return botProxy;
+    }
+
+    private static void saveUser(Long chatID, String username) {
+        UserServiceImpl.getInstance().saveUser(UserEntity.builder()
+                .id(chatID)
+                .username(username)
+                .build());
+    }
+
+    private static void saveHistory(Long chatID, String callData) {
+        HistoryServiceImpl.getInstance().insert(HistoryEntity.builder()
+                .user_id(chatID)
+                .command(callData)
+                .operation_time(Timestamp.from(Instant.now()))
+                .build());
     }
 }
