@@ -33,7 +33,7 @@ public class ShowAllAddedMoviesCommandResolver implements CommandResolver {
             moviesService.getMovies(chat_id)
                     .stream()
                     .forEach(e -> {
-                        TelegramBotUtils.sendMessage(tg_bot,e.toString(),chat_id);
+                        TelegramBotUtils.sendMessage(tg_bot,e.toString(),chat_id); // TODO: поправить вывод информации о фильме
                     });
             sessionManager.getSession(chat_id).setState(State.IDLE);
         }
