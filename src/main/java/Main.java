@@ -54,6 +54,8 @@ public class Main {
                         .movies(List.of(movieEntity))
                 .build());
 
+        UserEntity userEntity = session.find(UserEntity.class, 1215125);
+
         session.getTransaction().commit();
 
         return;
