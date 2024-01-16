@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum State {
     IDLE("/idle"),
+    START("/start"),
     ADD("/add"),
     SHOW_ALL("/showall"),
     FIND_BY_TITLE("/findbytitle"),
