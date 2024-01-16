@@ -26,25 +26,13 @@ import java.util.Map;
 
 public class WishlistTelegramBot extends TelegramLongPollingBot {
 
-    Map<String, CommandResolver> resolvers = Configuration.resolvers;
     private final SessionManager sessionManager = SessionManager.getInstance();
+    Map<String, CommandResolver> resolvers = Configuration.resolvers;
 
     private static String getResolverName(Long chatID) {
         Session session = SessionManager.getInstance().getSession(chatID);
         String resolverName = session.getState().getValue();
         return resolverName;
-    }
-
-    private void setSessionStateForThisUser(Long chatID, State state) {
-        sessionManager.getSession(chatID).setState(state);
-    }
-
-    private State getUserState(Long chatID) {
-        return sessionManager.getSession(chatID).getState();
-    }
-
-    private void createSessionForThisUser(Long chatID) {
-        sessionManager.createSession(chatID);
     }
 
     private static void addUserToDatabaseIfHesNotThere(Long chatID, String username) {
@@ -62,6 +50,18 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
                 .build());
     }
 
+    private void setSessionStateForThisUser(Long chatID, State state) {
+        sessionManager.getSession(chatID).setState(state);
+    }
+
+    private State getUserState(Long chatID) {
+        return sessionManager.getSession(chatID).getState();
+    }
+
+    private void createSessionForThisUser(Long chatID) {
+        sessionManager.createSession(chatID);
+    }
+
     public void init() throws TelegramApiException {
         this.execute(ButtonGenerator.generateMenuButtons());
     }
@@ -72,17 +72,10 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         /* Обработка кнопок */
         if (update.hasCallbackQuery()) {
             var query = update.getCallbackQuery();
-
             String callData = query.getData();
             Long chatID = query.getMessage().getChatId();
-
             String username = update.getCallbackQuery().getFrom().getUserName();
-//            addUserToDatabaseIfHesNotThere(chatID, username); // TODO: вынести в прокси
-
             createSessionForThisUser(chatID);
-
-//            addCommandToHistoryDB(chatID, callData); // TODO: вынести в прокси
-
             processCommand(callData, chatID, callData);
             if (getUserState(chatID) == State.IDLE) {
                 greetingScreen(chatID);
@@ -93,35 +86,28 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
 
             var message = update.getMessage();
-
             if (message.hasText()) {
                 var text = message.getText();
                 var chatID = message.getChatId();
-
                 String username = message.getChat().getUserName();
-//                addUserToDatabaseIfHesNotThere(chatID, username); // TODO: вынести в прокси
-
                 createSessionForThisUser(chatID);
-
-//                addCommandToHistoryDB(chatID, text); // TODO: вынести в прокси
-
-                if (text.startsWith("/start")) {
-                    setSessionStateForThisUser(chatID, State.IDLE);
+                String resolverName = getResolverName(chatID);
+                resolverName = resolverName.equals("/idle") ? text : resolverName;
+                processCommand(text, chatID, resolverName);
+                if (SessionManager.getInstance().getSession(chatID).getState() == State.IDLE) {
                     greetingScreen(chatID);
-                } else {
-                    String resolverName = getResolverName(chatID);
-                    processCommand(text, chatID, resolverName);
-                    if (SessionManager.getInstance().getSession(chatID).getState() == State.IDLE) {
-                        greetingScreen(chatID);
-                    }
                 }
             }
         }
-
     }
 
     private void processCommand(String text, Long chatID, String resolverName) {
         CommandResolver commandResolver = resolvers.get(resolverName);
+        if (commandResolver == null) {
+            TelegramBotUtils.sendMessage(this, "Вы ввели что-то некорректное, попробуйте еще раз", chatID);
+            SessionManager.getInstance().getSession(chatID).setState(State.IDLE);
+            return;
+        }
         commandResolver.resolveCommand(this, text, chatID);
     }
 
