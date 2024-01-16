@@ -1,6 +1,7 @@
 package repository.impl;
 
 import model.entity.HistoryEntity;
+import model.entity.UserEntity;
 import utils.SQLUtils;
 
 import javax.validation.constraints.NotNull;
@@ -24,11 +25,11 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
         try {
             String query = "insert into history (user_id, command, operation_time) values (?, ?, ?)";
             PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
-            preparedStatement.setLong(1, historyEntity.getUser_id());
+            preparedStatement.setLong(1, historyEntity.getUser().getId());
             preparedStatement.setString(2, historyEntity.getCommand());
-            preparedStatement.setTimestamp(3, historyEntity.getOperation_time());
+            preparedStatement.setTimestamp(3, historyEntity.getOperationTime());
             preparedStatement.execute();
-            
+
             preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
@@ -42,7 +43,7 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
             PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
             preparedStatement.setLong(1, userId);
             preparedStatement.execute();
-            
+
             preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
@@ -51,18 +52,21 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
 
     @Override
     public List<HistoryEntity> select(@NotNull Long userId) {
-       List<HistoryEntity> historyEntities = new ArrayList<>();
-       try {
-            String query = "select * from history where user_id = ?";
+        List<HistoryEntity> historyEntities = new ArrayList<>();
+        try {
+            String query = "select h.id, h.user_id, h.command, h.operation_time, u.username from history h where user_id = ? join users u";
             PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 historyEntities.add(HistoryEntity.builder()
                         .id(resultSet.getLong("id"))
-                        .user_id(resultSet.getInt("user_id"))
+                        .user(UserEntity.builder()
+                                .id(resultSet.getLong(2))
+                                .username(resultSet.getString(5))
+                                .build())
                         .command(resultSet.getString("command"))
-                        .operation_time(resultSet.getTimestamp("operation_time"))
+                        .operationTime(resultSet.getTimestamp("operation_time"))
                         .build());
             }
             resultSet.close();
@@ -70,6 +74,6 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
         } catch (SQLException e) {
             throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
         }
-       return historyEntities;
+        return historyEntities;
     }
 }

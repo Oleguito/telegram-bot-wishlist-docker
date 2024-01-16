@@ -22,6 +22,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserEntity getUser(Long chatID) {
+        return userRepo.getUser(chatID);
+    }
+
+    @Override
     public Optional<String> getUsername(long user_id) {
         return userRepo.getUsername(user_id);
     }

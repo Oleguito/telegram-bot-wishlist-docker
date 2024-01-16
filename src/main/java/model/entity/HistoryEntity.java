@@ -1,20 +1,30 @@
 package model.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.sql.Timestamp;
 
+@Entity
+@Table(name = "history")
 @Builder
 @Getter
+@Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class HistoryEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "history_seq_gen", sequenceName = "history_sequence")
     private long id;
-    private long user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+    @Column(name = "command")
     private String command;
-    private Timestamp operation_time;
+    @Column(name = "operation_time")
+    private Timestamp operationTime;
 
 }
