@@ -1,18 +1,27 @@
 package model.entity;
 
 
-import lombok.Builder;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Objects;
 
+@Entity
+@Table(name = "movies")
 @Builder
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class MovieEntity {
-    private final long id;
-    private final String ref;
-    private final String title;
-    private final Integer year;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "movies_seq_gen", sequenceName = "movies_sequence")
+    private long id;
+    private String ref;
+    private String title;
+    private Integer year;
 //    private final byte[] picture;
     
     @Override
@@ -35,7 +44,7 @@ public class MovieEntity {
                 Objects.equals(title, that.title) &&
                 Objects.equals(year, that.year);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(id, ref, title, year);

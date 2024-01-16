@@ -3,6 +3,7 @@ package handlers;
 import buttons.ButtonGenerator;
 import commands.Commands;
 import config.Configuration;
+import jakarta.persistence.EntityNotFoundException;
 import model.db.DBManager;
 import model.entity.HistoryEntity;
 import model.entity.UserEntity;
@@ -43,11 +44,16 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
     }
 
     private static void addCommandToHistoryDB(Long chatID, String callData) {
-        DBManager.getInstance().getHistoryRepo().insert(HistoryEntity.builder()
-                .user_id(chatID)
-                .command(callData)
-                .operation_time(Timestamp.from(Instant.now()))
-                .build());
+        UserEntity user = DBManager.getInstance().getUserRepo().getUser(chatID);
+        if (user != null) {
+            DBManager.getInstance().getHistoryRepo().insert(HistoryEntity.builder()
+                    .user(user)
+                    .command(callData)
+                    .operationTime(Timestamp.from(Instant.now()))
+                    .build());
+        } else {
+            throw new EntityNotFoundException("Такого пользователя нет в базе данных.");
+        }
     }
 
     private void setSessionStateForThisUser(Long chatID, State state) {

@@ -1,9 +1,17 @@
 import handlers.WishlistTelegramBot;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import model.entity.HistoryEntity;
+import model.entity.MovieEntity;
 import model.entity.UserEntity;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import service.HistoryService;
@@ -24,29 +32,42 @@ public class Main {
     private final HistoryService historyService = new HistoryServiceImpl();
 
     public static void main(String[] args) throws IOException {
-//        var dbmanager = DBManager.getInstance();
-//
-//        HistoryRepo historyRepo = dbmanager.getHistoryRepo();
-//        UserRepo ur = new UserRepoImpl(dbmanager.getConnection());
-//        MoviesRepo mr = new MoviesRepoImpl(dbmanager.getConnection());
-//
-//
-//        var service = new MoviesServiceImpl();
-//        service.saveMovie(MovieEntityStub.getNewMovieEntityStub(1), 646014498L);
-        // service.saveMovie(MovieEntityStub.getNewMovieEntityStub(2), 1337L);
 
-        // service.deleteAllMoviesOfUserFromDatabase(1337L);
+        StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().build();
+        SessionFactory sessionFactory = new Configuration()
+                .addAnnotatedClass(UserEntity.class)
+                .addAnnotatedClass(MovieEntity.class)
+                .configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
 
-        WishlistTelegramBot bot = new WishlistTelegramBot();
-        LongPollingBot botProxy = createBotProxy(bot);
+        session.save(MovieEntity.builder()
+                .ref("afsfa")
+                .title("afsfa")
+                .year(1995)
+                .build());
+        MovieEntity movieEntity = session.find(MovieEntity.class, 1);
 
-        try {
-            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(botProxy);
-            bot.init();
-        } catch (Exception e) {
-            throw new RuntimeException("Телеграм бот API в main()");
-        }
+        session.save(UserEntity.builder()
+                        .id(1215125)
+                        .username("TEST")
+                        .movies(List.of(movieEntity))
+                .build());
+
+        session.getTransaction().commit();
+
+        return;
+
+//        WishlistTelegramBot bot = new WishlistTelegramBot();
+//        LongPollingBot botProxy = createBotProxy(bot);
+//
+//        try {
+//            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+//            telegramBotsApi.registerBot(botProxy);
+//            bot.init();
+//        } catch (Exception e) {
+//            throw new RuntimeException("Телеграм бот API в main()");
+//        }
 
     }
 
@@ -98,10 +119,16 @@ public class Main {
     }
 
     private static void saveHistory(Long chatID, String callData) {
+        UserEntity user = UserServiceImpl.getInstance().getUser(chatID);
+
+        if (user == null) {
+            throw new EntityNotFoundException("Такого пользователя нет в БД");
+        }
+
         HistoryServiceImpl.getInstance().insert(HistoryEntity.builder()
-                .user_id(chatID)
+                .user(user)
                 .command(callData)
-                .operation_time(Timestamp.from(Instant.now()))
+                .operationTime(Timestamp.from(Instant.now()))
                 .build());
     }
 }
