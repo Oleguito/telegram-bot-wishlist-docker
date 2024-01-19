@@ -19,11 +19,14 @@ public class HistoryEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "history_seq_gen", sequenceName = "history_sequence")
     private long id;
-    @ManyToOne
+    
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+    
     @Column(name = "command")
     private String command;
+    
     @Column(name = "operation_time")
     private Timestamp operationTime;
 

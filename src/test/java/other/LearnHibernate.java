@@ -146,7 +146,7 @@ public class LearnHibernate {
         historyEntities.add(historyEntity);
         
         UserEntity user = UserEntity.builder()
-                .username("vasya_pupkin")
+                .username("vasya_pUpkin")
                 .history(historyEntities)
                 .id(90001)
                 .build();
@@ -159,5 +159,32 @@ public class LearnHibernate {
         assertEquals(user, found);
     }
     
+    @Test
+    @DisplayName("save a history entity with a user")
+    void save_a_history_entity_with_a_user() {
+
+        UserEntity user = UserEntity.builder()
+                .username("vasya_pOpkin")
+                .id(90002)
+                .build();
+        
+        HistoryEntity historyEntity = HistoryEntity.builder()
+                .command("/anothertestcommand")
+                .user(user)
+                .operationTime(Timestamp.from(Instant.now()))
+                .build();
+        
+        List<HistoryEntity> historyEntities = new ArrayList <>();
+        historyEntities.add(historyEntity);
+        user.setHistory(historyEntities);
+        
+        session.save(historyEntity);
+        session.getTransaction().commit();
+
+        HistoryEntity found = session.find(HistoryEntity.class, historyEntity.getId());
+
+        assertEquals(historyEntity, found);
+    }
+
     
 }
