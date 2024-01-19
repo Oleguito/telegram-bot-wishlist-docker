@@ -4,6 +4,7 @@ package model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +23,10 @@ public class MovieEntity {
     private String ref;
     private String title;
     private Integer year;
+    
+    @ManyToMany(mappedBy = "movies")
+    private List <UserEntity> users;
+    
 //    private final byte[] picture;
     
     @Override

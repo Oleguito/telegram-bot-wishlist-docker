@@ -33,7 +33,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().build();
+        // StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().build();
         SessionFactory sessionFactory = new Configuration()
                 .addAnnotatedClass(UserEntity.class)
                 .addAnnotatedClass(MovieEntity.class)
