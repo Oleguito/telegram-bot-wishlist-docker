@@ -37,17 +37,29 @@
             <version>6.8.0</version>
         </dependency>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.1</version>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.25.1</version>
         </dependency>
-
+		
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -66,18 +78,3 @@
     </dependencies>
 
 </project>
-
-
-        <!--testImplementation platform('org.junit:junit-bom:5.9.1')
-            testImplementation 'org.junit.jupiter:junit-jupiter'
-            implementation 'org.postgresql:postgresql:42.7.1'
-            implementation 'org.slf4j:slf4j-api:2.0.9'
-            implementation 'org.slf4j:slf4j-log4j12:2.0.9'
-            implementation 'org.telegram:telegrambots:6.8.0'
-            implementation 'org.jsoup:jsoup:1.17.1'
-
-            implementation 'org.projectlombok:lombok:1.18.30'
-            annotationProcessor 'org.projectlombok:lombok:1.18.30'
-
-            testCompileOnly 'org.projectlombok:lombok:1.18.30'
-            testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'-->
