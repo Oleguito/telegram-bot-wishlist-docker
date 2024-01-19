@@ -27,7 +27,6 @@ public class DBConnection {
         } catch (Exception e) {
             throw new RuntimeException("Произошла ошибка при подключении к БД. Подробности: " + e.getMessage());
         }
-        log.info("Подключились к БД");
     }
     
     public static DBConnection getInstance() {
