@@ -1,5 +1,6 @@
 package other;
 
+import model.entity.HistoryEntity;
 import model.entity.MovieEntity;
 import model.entity.UserEntity;
 import org.hibernate.Session;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.*;
 import org.telegram.telegrambots.meta.api.objects.User;
 import utils.HibernateUtil;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,6 +117,47 @@ public class LearnHibernate {
 
         assertEquals(movie, found);
     }
+    
+    @Test
+    @DisplayName("save history entity")
+    void save_history_entity() {
+        HistoryEntity historyEntity = HistoryEntity.builder()
+                .command("/testcommand")
+                .operationTime(Timestamp.from(Instant.now()))
+                .build();
 
+        session.save(historyEntity);
+        session.getTransaction().commit();
+
+        HistoryEntity found = session.find(HistoryEntity.class, historyEntity.getId());
+
+        assertEquals(historyEntity, found);
+    }
+    
+    @Test
+    @DisplayName("save a user with a history entity")
+    void save_a_user_with_a_history_entity() {
+        
+        List<HistoryEntity> historyEntities = new ArrayList <>();
+        HistoryEntity historyEntity = HistoryEntity.builder()
+                .command("/testcommand")
+                .operationTime(Timestamp.from(Instant.now()))
+                .build();
+        historyEntities.add(historyEntity);
+        
+        UserEntity user = UserEntity.builder()
+                .username("vasya_pupkin")
+                .history(historyEntities)
+                .id(90001)
+                .build();
+
+        session.save(user);
+        session.getTransaction().commit();
+
+        UserEntity found = session.find(UserEntity.class, user.getId());
+
+        assertEquals(user, found);
+    }
+    
     
 }
