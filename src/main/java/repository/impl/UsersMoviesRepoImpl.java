@@ -44,7 +44,7 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
 
         Query<UserEntity> query = session.createQuery(criteriaQuery);
         List<UserEntity> resultList = query.getResultList();
-        var result =  resultList.size() > 0;
+        var result = !resultList.isEmpty();
         session.close();
         return result;
 
