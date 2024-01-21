@@ -50,8 +50,7 @@ public class Main {
         usersMoviesRepo.movieRegistered(MovieEntity.builder()
                         .id(121512L)
                 .build(), 12412L);
-        
-        
+
 //        session.save(MovieEntity.builder()
 //                .ref("afsfa")
 //                .title("afsfa")

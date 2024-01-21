@@ -40,6 +40,7 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
                         criteriaBuilder.equal(root.get("movies").get("id"), movie.getId())
                 )
         );
+
         Query<UserEntity> query = session.createQuery(criteriaQuery);
         List<UserEntity> resultList = query.getResultList();
 
