@@ -1,6 +1,7 @@
 package repository.impl;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import model.entity.MovieEntity;
@@ -43,7 +44,9 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
 
         Query<UserEntity> query = session.createQuery(criteriaQuery);
         List<UserEntity> resultList = query.getResultList();
-        return resultList.size() > 0;
+        var result =  resultList.size() > 0;
+        session.close();
+        return result;
 
         // var result = false;
         // try {
@@ -68,22 +71,43 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
 
     @Override
     public void deleteMoviesOfUser(Long chatId) {
-        try {
-
-            String query = """
-                    delete from users_movies
-                    where user_id = ?
-                    """;
-
-            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
-            preparedStatement.setLong(1, chatId);
-            preparedStatement.execute();
-
-            preparedStatement.close();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Произошла ошибка выполнения запроса", e);
-        }
+        
+        Session session = sessionFactory.openSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaDelete <MovieEntity> criteriaDelete =
+                session.getCriteriaBuilder().createCriteriaDelete(MovieEntity.class);
+        Root<MovieEntity> root = criteriaDelete.from(MovieEntity.class);
+        criteriaDelete.where(criteriaBuilder.equal(root.get("chatId"), chatId));
+        
+        session.beginTransaction();
+        session.createQuery(criteriaDelete).executeUpdate();
+        session.getTransaction().commit();
+        session.close();
+        
+        
+        // root.join("movies");
+        // criteriaDelete
+        //
+        // Query<UserEntity> query = session.createQuery(criteriaDelete);
+        // List<UserEntity> resultList = query.getResultList();
+        
+        
+        // try {
+        //
+        //     String query = """
+        //             delete from users_movies
+        //             where user_id = ?
+        //             """;
+        //
+        //     PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
+        //     preparedStatement.setLong(1, chatId);
+        //     preparedStatement.execute();
+        //
+        //     preparedStatement.close();
+        //
+        // } catch (SQLException e) {
+        //     throw new RuntimeException("Произошла ошибка выполнения запроса", e);
+        // }
 
     }
 }
