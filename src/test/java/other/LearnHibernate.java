@@ -1,5 +1,9 @@
 package other;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
 import model.entity.HistoryEntity;
 import model.entity.MovieEntity;
 import model.entity.UserEntity;
@@ -46,7 +50,7 @@ public class LearnHibernate {
                 .username("TEST")
                 .build();
         
-        session.save(user);
+        session.persist(user);
         session.getTransaction().commit();
         
         UserEntity found = session.find(UserEntity.class, chatId);
@@ -186,5 +190,28 @@ public class LearnHibernate {
         assertEquals(historyEntity, found);
     }
 
+    @Test
+    @DisplayName("learn criteria builder")
+    void learn_criteria_builder() {
+        
+        
+        
+        
+        CriteriaBuilder criteriaBuilder = sessionFactory.openSession().getCriteriaBuilder();
+        CriteriaQuery <UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
+        Root <UserEntity> root = criteriaQuery.from(UserEntity.class);
+        // criteriaQuery.select(root).where(criteriaBuilder.equal(
+        //         root.get("user").
+        // ))
+        
+        // Join <MovieEntity, UserEntity> moviesJoin = root.join("users");
+        // CriteriaQuery <UserEntity> result = criteriaQuery.select(root).where(criteriaBuilder.and(
+        //         criteriaBuilder.equal(root.get("chatId"), chatID),
+        //         criteriaBuilder.equal(moviesJoin.get("id"), movie.getId())
+        // ));
+        
+        System.out.println("");
+        
+    }
     
 }

@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cfg.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,6 +18,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import service.HistoryService;
 import service.impl.HistoryServiceImpl;
 import service.impl.UserServiceImpl;
+import utils.SessionFactoryImpl;
 
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -37,10 +39,14 @@ public class Main {
         SessionFactory sessionFactory = new Configuration()
                 .addAnnotatedClass(UserEntity.class)
                 .addAnnotatedClass(MovieEntity.class)
+                .addAnnotatedClass(HistoryEntity.class)
                 .configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
+        
 
+        
+        
         session.save(MovieEntity.builder()
                 .ref("afsfa")
                 .title("afsfa")

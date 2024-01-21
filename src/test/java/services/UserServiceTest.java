@@ -4,7 +4,6 @@ import model.db.DBConnection;
 import model.entity.UserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 import service.UserService;
 import service.impl.UserServiceImpl;
 import utils.SQLUtils;
@@ -12,11 +11,9 @@ import utils.SQLUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
     
