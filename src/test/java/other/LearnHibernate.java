@@ -162,7 +162,7 @@ public class LearnHibernate {
     @Test
     @DisplayName("save a history entity with a user")
     void save_a_history_entity_with_a_user() {
-
+        
         UserEntity user = UserEntity.builder()
                 .username("vasya_pOpkin")
                 .id(90002)

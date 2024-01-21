@@ -17,7 +17,7 @@ public class LearnMockito {
     
     @BeforeEach
     void before() {
-        mockedList = Mockito.mock(List.class);
+        mockedList = mock(List.class);
     }
     
     @Test
@@ -26,7 +26,7 @@ public class LearnMockito {
         mockedList.add("one");
         verify(mockedList).add("one");
     }
-    
+
     @Test
     @DisplayName("Learn when then")
     void learn_when_then() {
@@ -74,9 +74,6 @@ public class LearnMockito {
         // mockedList.clear();
     }
 
-    
-    
-    
     private ArgumentMatcher <Object> isValid() {
         return new Vasya();
     }
