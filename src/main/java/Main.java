@@ -1,6 +1,7 @@
 import handlers.WishlistTelegramBot;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import model.db.DBManager;
 import model.entity.HistoryEntity;
 import model.entity.MovieEntity;
 import model.entity.UserEntity;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import repository.impl.UsersMoviesRepoImpl;
 import service.HistoryService;
 import service.impl.HistoryServiceImpl;
 import service.impl.UserServiceImpl;
@@ -43,26 +45,28 @@ public class Main {
                 .configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        
 
-        
-        
-        session.save(MovieEntity.builder()
-                .ref("afsfa")
-                .title("afsfa")
-                .year(1995)
-                .build());
-        MovieEntity movieEntity = session.find(MovieEntity.class, 1);
+        UsersMoviesRepoImpl usersMoviesRepo = new UsersMoviesRepoImpl(DBManager.getInstance().getConnection());
+        usersMoviesRepo.movieRegistered(MovieEntity.builder()
+                        .id(121512L)
+                .build(), 12412L);
 
-        session.save(UserEntity.builder()
-                        .id(1215125)
-                        .username("TEST")
-                        .movies(List.of(movieEntity))
-                .build());
-
-        UserEntity userEntity = session.find(UserEntity.class, 1215125);
-
-        session.getTransaction().commit();
+//        session.save(MovieEntity.builder()
+//                .ref("afsfa")
+//                .title("afsfa")
+//                .year(1995)
+//                .build());
+//        MovieEntity movieEntity = session.find(MovieEntity.class, 1);
+//
+//        session.save(UserEntity.builder()
+//                        .id(1215125)
+//                        .username("TEST")
+//                        .movies(List.of(movieEntity))
+//                .build());
+//
+//        UserEntity userEntity = session.find(UserEntity.class, 1215125);
+//
+//        session.getTransaction().commit();
 
         return;
 
