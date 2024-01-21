@@ -28,6 +28,9 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "movie_id"))
     private List<MovieEntity> movies;
     
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<HistoryEntity> history;
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }

@@ -23,7 +23,7 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public void clear(Long user_id) {
-        historyRepo.clear(user_id);
+        historyRepo.clearAllHistoryForUser(user_id);
     }
 
     @Override

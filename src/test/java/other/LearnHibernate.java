@@ -1,5 +1,10 @@
 package other;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
+import model.entity.HistoryEntity;
 import model.entity.MovieEntity;
 import model.entity.UserEntity;
 import org.hibernate.Session;
@@ -8,6 +13,8 @@ import org.junit.jupiter.api.*;
 import org.telegram.telegrambots.meta.api.objects.User;
 import utils.HibernateUtil;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +50,7 @@ public class LearnHibernate {
                 .username("TEST")
                 .build();
         
-        session.save(user);
+        session.persist(user);
         session.getTransaction().commit();
         
         UserEntity found = session.find(UserEntity.class, chatId);
@@ -114,6 +121,97 @@ public class LearnHibernate {
 
         assertEquals(movie, found);
     }
+    
+    @Test
+    @DisplayName("save history entity")
+    void save_history_entity() {
+        HistoryEntity historyEntity = HistoryEntity.builder()
+                .command("/testcommand")
+                .operationTime(Timestamp.from(Instant.now()))
+                .build();
 
+        session.save(historyEntity);
+        session.getTransaction().commit();
+
+        HistoryEntity found = session.find(HistoryEntity.class, historyEntity.getId());
+
+        assertEquals(historyEntity, found);
+    }
+    
+    @Test
+    @DisplayName("save a user with a history entity")
+    void save_a_user_with_a_history_entity() {
+        
+        List<HistoryEntity> historyEntities = new ArrayList <>();
+        HistoryEntity historyEntity = HistoryEntity.builder()
+                .command("/testcommand")
+                .operationTime(Timestamp.from(Instant.now()))
+                .build();
+        historyEntities.add(historyEntity);
+        
+        UserEntity user = UserEntity.builder()
+                .username("vasya_pUpkin")
+                .history(historyEntities)
+                .id(90001)
+                .build();
+
+        session.save(user);
+        session.getTransaction().commit();
+
+        UserEntity found = session.find(UserEntity.class, user.getId());
+
+        assertEquals(user, found);
+    }
+    
+    @Test
+    @DisplayName("save a history entity with a user")
+    void save_a_history_entity_with_a_user() {
+        
+        UserEntity user = UserEntity.builder()
+                .username("vasya_pOpkin")
+                .id(90002)
+                .build();
+        
+        HistoryEntity historyEntity = HistoryEntity.builder()
+                .command("/anothertestcommand")
+                .user(user)
+                .operationTime(Timestamp.from(Instant.now()))
+                .build();
+        
+        List<HistoryEntity> historyEntities = new ArrayList <>();
+        historyEntities.add(historyEntity);
+        user.setHistory(historyEntities);
+        
+        session.save(historyEntity);
+        session.getTransaction().commit();
+
+        HistoryEntity found = session.find(HistoryEntity.class, historyEntity.getId());
+
+        assertEquals(historyEntity, found);
+    }
+
+    @Test
+    @DisplayName("learn criteria builder")
+    void learn_criteria_builder() {
+        
+        
+        
+        
+        CriteriaBuilder criteriaBuilder = sessionFactory.openSession().getCriteriaBuilder();
+        CriteriaQuery <UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
+        Root <UserEntity> root = criteriaQuery.from(UserEntity.class);
+        // criteriaQuery.select(root).where(criteriaBuilder.equal(
+        //         root.get("user").
+        // ))
+        
+        // Join <MovieEntity, UserEntity> moviesJoin = root.join("users");
+        // CriteriaQuery <UserEntity> result = criteriaQuery.select(root).where(criteriaBuilder.and(
+        //         criteriaBuilder.equal(root.get("chatId"), chatID),
+        //         criteriaBuilder.equal(moviesJoin.get("id"), movie.getId())
+        // ));
+        
+        System.out.println("");
+        
+    }
     
 }

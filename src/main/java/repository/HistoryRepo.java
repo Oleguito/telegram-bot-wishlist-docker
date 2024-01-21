@@ -9,7 +9,7 @@ import java.util.List;
 public interface HistoryRepo {
     void insert(HistoryEntity historyEntity);
     
-    void clear(@NotNull Long userId);
+    void clearAllHistoryForUser(@NotNull Long userId);
 
     List<HistoryEntity> select(@NotNull Long userID);
 }
