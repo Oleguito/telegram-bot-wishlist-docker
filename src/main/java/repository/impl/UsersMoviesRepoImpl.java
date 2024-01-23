@@ -7,6 +7,7 @@ import model.entity.MovieEntity;
 import model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
 import repository.UsersMoviesRepo;
 import utils.SQLUtils;
@@ -68,22 +69,30 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
 
     @Override
     public void deleteMoviesOfUser(Long chatId) {
-        try {
 
-            String query = """
-                    delete from users_movies
-                    where user_id = ?
-                    """;
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        MutationQuery nativeMutationQuery = session.createNativeMutationQuery("delete from users_movies um where um.user_id = :param");
+        nativeMutationQuery.setParameter("param", chatId);
+        nativeMutationQuery.executeUpdate();
+        session.getTransaction().commit();
 
-            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
-            preparedStatement.setLong(1, chatId);
-            preparedStatement.execute();
-
-            preparedStatement.close();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Произошла ошибка выполнения запроса", e);
-        }
+        //        try {
+//
+//            String query = """
+//                    delete from users_movies
+//                    where user_id = ?
+//                    """;
+//
+//            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
+//            preparedStatement.setLong(1, chatId);
+//            preparedStatement.execute();
+//
+//            preparedStatement.close();
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException("Произошла ошибка выполнения запроса", e);
+//        }
 
     }
 }
