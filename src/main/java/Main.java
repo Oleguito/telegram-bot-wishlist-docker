@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import repository.impl.MoviesRepoImpl;
 import repository.impl.UsersMoviesRepoImpl;
 import service.HistoryService;
 import service.impl.HistoryServiceImpl;
@@ -43,13 +44,19 @@ public class Main {
                 .addAnnotatedClass(MovieEntity.class)
                 .addAnnotatedClass(HistoryEntity.class)
                 .configure().buildSessionFactory();
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+//        Session session = sessionFactory.openSession();
+//        session.beginTransaction();
 
+        MoviesRepoImpl moviesRepo = new MoviesRepoImpl(DBManager.getInstance().getConnection());
         UsersMoviesRepoImpl usersMoviesRepo = new UsersMoviesRepoImpl(DBManager.getInstance().getConnection());
-        usersMoviesRepo.movieRegistered(MovieEntity.builder()
-                        .id(121512L)
-                .build(), 12412L);
+        List<MovieEntity> movies = moviesRepo.getMovies(124121L);
+        usersMoviesRepo.deleteMoviesOfUser(124121L);
+        List<MovieEntity> moviesAfter = moviesRepo.getMovies(124121L);
+
+//        UsersMoviesRepoImpl usersMoviesRepo = new UsersMoviesRepoImpl(DBManager.getInstance().getConnection());
+//        usersMoviesRepo.movieRegistered(MovieEntity.builder()
+//                        .id(121512L)
+//                .build(), 12412L);
 
 //        session.save(MovieEntity.builder()
 //                .ref("afsfa")
