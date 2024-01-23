@@ -194,12 +194,41 @@ public class LearnHibernate {
     @DisplayName("learn criteria builder")
     void learn_criteria_builder() {
         
+        //region Сетап: сохранение юзера с фильмом в БД
+        MovieEntity movie = MovieEntity.builder()
+                .title("Iron Man Ressurrection")
+                .ref("reference")
+                .year(9991)
+                .build();
         
+        UserEntity user = UserEntity.builder()
+                .username("baba_fedora")
+                .id(1388)
+                .build();
         
+        List <MovieEntity> userMovies = user.getMovies();
+        userMovies.add(movie);
         
-        CriteriaBuilder criteriaBuilder = sessionFactory.openSession().getCriteriaBuilder();
-        CriteriaQuery <UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
-        Root <UserEntity> root = criteriaQuery.from(UserEntity.class);
+        session.save(user);
+        session.getTransaction().commit();
+        //endregion
+        
+        Session anotherSession = sessionFactory.openSession();
+        CriteriaBuilder cb = anotherSession.getCriteriaBuilder();
+        CriteriaQuery <UserEntity> criteriaQuery = cb.createQuery(UserEntity.class);
+        Root <UserEntity> userEntity = criteriaQuery.from(UserEntity.class);
+        userEntity.join("movies");
+        
+        // CriteriaQuery <UserEntity> result = criteriaQuery
+        //         .select(userEntity)
+        //         .where(cb.and(
+        //                         cb.equal(userEntity.get("id"),
+        //                                 me.get("id"))
+        //                 )
+        //         );
+        //
+        // anotherSession.createQuery(criteriaQuery)
+        
         // criteriaQuery.select(root).where(criteriaBuilder.equal(
         //         root.get("user").
         // ))

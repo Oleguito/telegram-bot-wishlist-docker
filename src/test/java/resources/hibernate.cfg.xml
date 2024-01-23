@@ -18,6 +18,6 @@
 <!--        <property name="hibernate."></property>-->
         
         <!-- DB schema will be updated if needed -->
-         <property name="hibernate.hbm2ddl.auto">update</property>
+         <property name="hibernate.hbm2ddl.auto">create-drop</property>
     </session-factory>
 </hibernate-configuration>
