@@ -53,7 +53,6 @@ public class Main {
         usersMoviesRepo.deleteMoviesOfUser(124121L);
         List<MovieEntity> moviesAfter = moviesRepo.getMovies(124121L);
 
-
 //        UsersMoviesRepoImpl usersMoviesRepo = new UsersMoviesRepoImpl(DBManager.getInstance().getConnection());
 //        usersMoviesRepo.movieRegistered(MovieEntity.builder()
 //                        .id(121512L)

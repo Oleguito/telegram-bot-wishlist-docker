@@ -77,7 +77,7 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
         nativeMutationQuery.executeUpdate();
         session.getTransaction().commit();
 
-        //        try {
+//        try {
 //
 //            String query = """
 //                    delete from users_movies

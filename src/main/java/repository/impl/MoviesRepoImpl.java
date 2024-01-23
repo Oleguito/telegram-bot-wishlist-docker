@@ -60,7 +60,7 @@ public class MoviesRepoImpl implements MoviesRepo {
 
         return session.createQuery(query).getResultList();
 
-        //        try {
+//        try {
 //
 //            List<MovieEntity> result = new ArrayList <>();
 //
