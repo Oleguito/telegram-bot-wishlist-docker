@@ -1,11 +1,16 @@
 package other;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
 import model.entity.HistoryEntity;
 import model.entity.MovieEntity;
 import model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.*;
+import org.telegram.telegrambots.meta.api.objects.User;
 import utils.HibernateUtil;
 
 import java.sql.Timestamp;
@@ -15,7 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LearnHibernateNew {
+public class LearnHibernate {
     
     private static SessionFactory sessionFactory;
     private Session session;
@@ -185,101 +190,57 @@ public class LearnHibernateNew {
         assertEquals(historyEntity, found);
     }
 
-    // @Test
-    // @DisplayName("learn criteria builder")
-    // void learn_criteria_builder() {
-    //
-    //     //region Сетап: сохранение юзера с фильмом в БД
-    //     MovieEntity movie = MovieEntity.builder()
-    //             .title("Iron Man Ressurrection")
-    //             .ref("reference")
-    //             .year(9991)
-    //             .build();
-    //
-    //     UserEntity user = UserEntity.builder()
-    //             .username("baba_fedora")
-    //             .id(1388)
-    //             .build();
-    //
-    //     List <MovieEntity> userMovies = user.getMovies();
-    //     userMovies.add(movie);
-    //
-    //     session.save(user);
-    //     session.getTransaction().commit();
-    //     //endregion
-    //
-    //     Session anotherSession = sessionFactory.openSession();
-    //     CriteriaBuilder cb = anotherSession.getCriteriaBuilder();
-    //     CriteriaQuery <UserEntity> criteriaQuery = cb.createQuery(UserEntity.class);
-    //     Root <UserEntity> userEntity = criteriaQuery.from(UserEntity.class);
-    //     userEntity.join("movies");
-    //
-    //     // CriteriaQuery <UserEntity> result = criteriaQuery
-    //     //         .select(userEntity)
-    //     //         .where(cb.and(
-    //     //                         cb.equal(userEntity.get("id"),
-    //     //                                 me.get("id"))
-    //     //                 )
-    //     //         );
-    //     //
-    //     // anotherSession.createQuery(criteriaQuery)
-    //
-    //     // criteriaQuery.select(root).where(criteriaBuilder.equal(
-    //     //         root.get("user").
-    //     // ))
-    //
-    //     // Join <MovieEntity, UserEntity> moviesJoin = root.join("users");
-    //     // CriteriaQuery <UserEntity> result = criteriaQuery.select(root).where(criteriaBuilder.and(
-    //     //         criteriaBuilder.equal(root.get("chatId"), chatID),
-    //     //         criteriaBuilder.equal(moviesJoin.get("id"), movie.getId())
-    //     // ));
-    //
-    //     System.out.println("");
-    //
-    // }
-    //
-    // @Test
-    // @DisplayName("Learn delete movies of a user")
-    // void learn_delete_movies_of_a_user() {
-    //
-    //
-    //     //region Сетап: сохранение юзера с фильмом в БД
-    //     MovieEntity movie = MovieEntity.builder()
-    //             .title("Iron Man Ressurrection")
-    //             .ref("reference")
-    //             .year(9991)
-    //             .build();
-    //
-    //     UserEntity user = UserEntity.builder()
-    //             .username("baba_fedora")
-    //             .id(1388)
-    //             .build();
-    //
-    //     List <MovieEntity> userMovies = new ArrayList<>();
-    //     userMovies.add(movie);
-    //     user.setMovies(userMovies);
-    //
-    //     session.save(user);
-    //     session.getTransaction().commit();
-    //     session.close();
-    //     //endregion
-    //
-    //
-    //     Session session = sessionFactory.openSession();
-    //     CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-    //     CriteriaDelete <MovieEntity> criteriaDelete =
-    //             criteriaBuilder.createCriteriaDelete(MovieEntity.class);
-    //     Root<MovieEntity> movieRoot = criteriaDelete.from(MovieEntity.class);
-    //     Join <UserEntity, MovieEntity> joined = movieRoot.join("users");
-    //
-    //     criteriaDelete.where(criteriaBuilder.equal(
-    //             movieRoot.get("users").get("id"), user.getId()));
-    //
-    //     session.beginTransaction();
-    //     session.createMutationQuery(criteriaDelete).executeUpdate();
-    //     session.getTransaction().commit();
-    //     session.close();
-    // }
-    
+    @Test
+    @DisplayName("learn criteria builder")
+    void learn_criteria_builder() {
+        
+        //region Сетап: сохранение юзера с фильмом в БД
+        MovieEntity movie = MovieEntity.builder()
+                .title("Iron Man Ressurrection")
+                .ref("reference")
+                .year(9991)
+                .build();
+        
+        UserEntity user = UserEntity.builder()
+                .username("baba_fedora")
+                .id(1388)
+                .build();
+        
+        List <MovieEntity> userMovies = user.getMovies();
+        userMovies.add(movie);
+        
+        session.save(user);
+        session.getTransaction().commit();
+        //endregion
+        
+        Session anotherSession = sessionFactory.openSession();
+        CriteriaBuilder cb = anotherSession.getCriteriaBuilder();
+        CriteriaQuery <UserEntity> criteriaQuery = cb.createQuery(UserEntity.class);
+        Root <UserEntity> userEntity = criteriaQuery.from(UserEntity.class);
+        userEntity.join("movies");
+        
+        // CriteriaQuery <UserEntity> result = criteriaQuery
+        //         .select(userEntity)
+        //         .where(cb.and(
+        //                         cb.equal(userEntity.get("id"),
+        //                                 me.get("id"))
+        //                 )
+        //         );
+        //
+        // anotherSession.createQuery(criteriaQuery)
+        
+        // criteriaQuery.select(root).where(criteriaBuilder.equal(
+        //         root.get("user").
+        // ))
+        
+        // Join <MovieEntity, UserEntity> moviesJoin = root.join("users");
+        // CriteriaQuery <UserEntity> result = criteriaQuery.select(root).where(criteriaBuilder.and(
+        //         criteriaBuilder.equal(root.get("chatId"), chatID),
+        //         criteriaBuilder.equal(moviesJoin.get("id"), movie.getId())
+        // ));
+        
+        System.out.println("");
+        
+    }
     
 }

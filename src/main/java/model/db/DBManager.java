@@ -34,7 +34,7 @@ public class DBManager {
         
         connection = DBConnection.getInstance().getConnection();
         historyRepo = new HistoryRepoImpl(connection);
-        moviesRepo = new MoviesRepoImpl(connection);
+        moviesRepo = new MoviesRepoImpl();
         usersMoviesRepo = new UsersMoviesRepoImpl(connection);
         userRepo = new UserRepoImpl(connection);
         parser = new KinopoiskParser();

@@ -1,13 +1,13 @@
 package repository.impl;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import model.entity.MovieEntity;
 import model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
 import repository.UsersMoviesRepo;
 import utils.SQLUtils;
@@ -44,9 +44,7 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
 
         Query<UserEntity> query = session.createQuery(criteriaQuery);
         List<UserEntity> resultList = query.getResultList();
-        var result = !resultList.isEmpty();
-        session.close();
-        return result;
+        return resultList.size() > 0;
 
         // var result = false;
         // try {
@@ -71,43 +69,30 @@ public class UsersMoviesRepoImpl implements UsersMoviesRepo {
 
     @Override
     public void deleteMoviesOfUser(Long chatId) {
-        
+
         Session session = sessionFactory.openSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaDelete <MovieEntity> criteriaDelete =
-                session.getCriteriaBuilder().createCriteriaDelete(MovieEntity.class);
-        Root<MovieEntity> root = criteriaDelete.from(MovieEntity.class);
-        criteriaDelete.where(criteriaBuilder.equal(root.get("chatId"), chatId));
-        
         session.beginTransaction();
-        session.createQuery(criteriaDelete).executeUpdate();
+        MutationQuery nativeMutationQuery = session.createNativeMutationQuery("delete from users_movies um where um.user_id = :param");
+        nativeMutationQuery.setParameter("param", chatId);
+        nativeMutationQuery.executeUpdate();
         session.getTransaction().commit();
-        session.close();
-        
-        
-        // root.join("movies");
-        // criteriaDelete
-        //
-        // Query<UserEntity> query = session.createQuery(criteriaDelete);
-        // List<UserEntity> resultList = query.getResultList();
-        
-        
-        // try {
-        //
-        //     String query = """
-        //             delete from users_movies
-        //             where user_id = ?
-        //             """;
-        //
-        //     PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
-        //     preparedStatement.setLong(1, chatId);
-        //     preparedStatement.execute();
-        //
-        //     preparedStatement.close();
-        //
-        // } catch (SQLException e) {
-        //     throw new RuntimeException("Произошла ошибка выполнения запроса", e);
-        // }
+
+//        try {
+//
+//            String query = """
+//                    delete from users_movies
+//                    where user_id = ?
+//                    """;
+//
+//            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
+//            preparedStatement.setLong(1, chatId);
+//            preparedStatement.execute();
+//
+//            preparedStatement.close();
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException("Произошла ошибка выполнения запроса", e);
+//        }
 
     }
 }
