@@ -2,7 +2,6 @@ package other;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import model.entity.HistoryEntity;
 import model.entity.MovieEntity;
@@ -10,7 +9,6 @@ import model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.*;
-import org.telegram.telegrambots.meta.api.objects.User;
 import utils.HibernateUtil;
 
 import java.sql.Timestamp;
@@ -20,7 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LearnHibernate {
+public class LearnHibernateNew {
     
     private static SessionFactory sessionFactory;
     private Session session;

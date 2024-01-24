@@ -3,6 +3,7 @@ package repository.impl;
 import model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.telegram.telegrambots.meta.api.objects.User;
 import repository.UserRepo;
 import utils.SQLUtils;
 import utils.SessionFactoryImpl;
@@ -27,7 +28,14 @@ public class UserRepoImpl implements UserRepo {
     public void saveUser(UserEntity userEntity) {
         
         Session session = sessionFactory.openSession();
-        session.persist(userEntity);
+        
+        UserEntity user = session.find(UserEntity.class, userEntity.getId());
+        
+        if(user == null) {
+            session.beginTransaction();
+            session.persist(userEntity);
+            session.getTransaction().commit();
+        }
         session.close();
         
         

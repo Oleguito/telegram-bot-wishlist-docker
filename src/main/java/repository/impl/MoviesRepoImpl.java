@@ -2,6 +2,7 @@ package repository.impl;
 
 import model.entity.MovieEntity;
 import model.entity.UserEntity;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
@@ -37,7 +38,10 @@ public class MoviesRepoImpl implements MoviesRepo {
         movieEntity.addUser(currentUser);
         
         session.beginTransaction();
-        session.persist(movieEntity);
+        /*  TODO: если написать persist то Hibernate ругается
+        *   что фильм не находится в контексте для сохранения
+        *   un.... entity passed to persist */
+        session.save(movieEntity);
         session.getTransaction().commit();
         session.close();
         

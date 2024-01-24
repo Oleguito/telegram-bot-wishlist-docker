@@ -29,7 +29,11 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
 
     @Override
     public void insert(HistoryEntity historyEntity) {
-        sessionFactory.openSession().persist(historyEntity);
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.merge(historyEntity);
+        session.getTransaction().commit();
+        session.close();
         // try {
         //     String query = "insert into history (user_id, command, operation_time) values (?, ?, ?)";
         //     PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
@@ -80,6 +84,7 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
     public List<HistoryEntity> select(@NotNull Long chatId) {
         
         Session session = sessionFactory.openSession();
+        session.beginTransaction();
         UserEntity user = session.find(UserEntity.class, chatId);
         session.getTransaction().commit();
         session.close();
