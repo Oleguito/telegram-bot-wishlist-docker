@@ -88,7 +88,8 @@ public class HistoryRepoImpl implements repository.HistoryRepo {
         UserEntity user = session.find(UserEntity.class, chatId);
         session.getTransaction().commit();
         session.close();
-        return user.getHistory();
+        List <HistoryEntity> result = user.getHistory();
+        return result;
         
         
         // List<HistoryEntity> historyEntities = new ArrayList<>();

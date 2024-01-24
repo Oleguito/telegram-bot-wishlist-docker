@@ -1,5 +1,6 @@
 package resolvers.impl;
 
+import model.entity.HistoryEntity;
 import org.glassfish.grizzly.http.util.TimeStamp;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import resolvers.CommandResolver;
@@ -29,11 +30,13 @@ public class GetHistoryCommandResolver implements CommandResolver {
     @Override
     public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chat_id) {
         if(text.startsWith("/history")) {
-            var to = historyService.getUserHistory(chat_id)
+            List <HistoryEntity> userHistory = historyService.getUserHistory(chat_id);
+            var to = userHistory
                     .stream()
                     .map(e -> e.toString())
                     .toList();
             
+            TelegramBotUtils.sendMessage(tg_bot, "История ваших сообщений:", chat_id);
             generateMessages(to).stream().forEach(e -> {
                 TelegramBotUtils.sendMessage(tg_bot, e, chat_id);
             });

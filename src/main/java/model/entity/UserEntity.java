@@ -28,7 +28,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "movie_id"))
     private List<MovieEntity> movies;
     
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<HistoryEntity> history;
     
     @Override
