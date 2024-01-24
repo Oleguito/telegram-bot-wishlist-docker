@@ -21,18 +21,18 @@ public class SessionManager {
         return instance;
     }
     
-    public void manageSession (String callData, Long chatID) {
-        if(!userToSession.containsKey(chatID)) {
-            throw new RuntimeException("Такого юзера нету в мапе класса");
-        }
-        
-        switch (userToSession.get(chatID).getState()) {
-            case State.IDLE -> {
-            
-            }
-        }
-        
-    }
+    // public void manageSession (String callData, Long chatID) {
+    //     if(!userToSession.containsKey(chatID)) {
+    //         throw new RuntimeException("Такого юзера нету в мапе класса");
+    //     }
+    //
+    //     switch (userToSession.get(chatID).getState()) {
+    //         case State.IDLE -> {
+    //
+    //         }
+    //     }
+    //
+    // }
     
     public void createSession(Long chatID) {
         if(userToSession.containsKey(chatID)) return;
