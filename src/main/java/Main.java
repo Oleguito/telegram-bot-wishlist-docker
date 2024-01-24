@@ -1,34 +1,21 @@
-import handlers.WishlistTelegramBot;
+import presentation.bot.handlers.WishlistTelegramBot;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import model.db.DBManager;
-import model.entity.HistoryEntity;
-import model.entity.MovieEntity;
-import model.entity.UserEntity;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.boot.spi.SessionFactoryOptions;
-import org.hibernate.cfg.Configuration;
+import domain.model.entity.HistoryEntity;
+import domain.model.entity.UserEntity;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import repository.impl.MoviesRepoImpl;
-import repository.impl.UsersMoviesRepoImpl;
-import service.HistoryService;
-import service.impl.HistoryServiceImpl;
-import service.impl.UserServiceImpl;
-import utils.SessionFactoryImpl;
+import application.service.HistoryService;
+import application.service.impl.HistoryServiceImpl;
+import application.service.impl.UserServiceImpl;
 
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-import java.util.function.Consumer;
 
 
 @Slf4j
