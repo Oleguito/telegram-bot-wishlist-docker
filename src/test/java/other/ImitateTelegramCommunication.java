@@ -1,13 +1,5 @@
 package other;
 
-import buttons.ButtonGenerator;
-import handlers.WishlistTelegramBot;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 public class ImitateTelegramCommunication {
     //
     // @Test

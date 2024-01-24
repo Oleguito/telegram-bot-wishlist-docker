@@ -1,15 +1,9 @@
 package database;
 
-import model.db.DBConnection;
-import org.junit.jupiter.api.AfterAll;
+import domain.model.db.DBConnection;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import utils.SQLUtils;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.Optional;
 
 public class QueringDatabaseTests {
     

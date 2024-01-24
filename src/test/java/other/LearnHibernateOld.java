@@ -1,12 +1,12 @@
 package other;
 
-import model.entity.HistoryEntity;
-import model.entity.MovieEntity;
-import model.entity.UserEntity;
+import domain.model.entity.HistoryEntity;
+import domain.model.entity.MovieEntity;
+import domain.model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.*;
-import utils.HibernateUtil;
+import infrastructure.utils.HibernateUtil;
 
 import java.sql.Timestamp;
 import java.time.Instant;

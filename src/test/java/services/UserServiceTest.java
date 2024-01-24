@@ -1,12 +1,12 @@
 package services;
 
-import model.db.DBConnection;
-import model.entity.UserEntity;
+import domain.model.db.DBConnection;
+import domain.model.entity.UserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import service.UserService;
-import service.impl.UserServiceImpl;
-import utils.SQLUtils;
+import application.service.UserService;
+import application.service.impl.UserServiceImpl;
+import infrastructure.utils.SQLUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
