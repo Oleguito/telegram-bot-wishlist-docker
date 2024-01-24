@@ -1,12 +1,14 @@
 package repository.impl;
 
 import model.entity.MovieEntity;
+import model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 import org.hibernate.query.criteria.JpaCriteriaQuery;
 import org.hibernate.query.criteria.JpaRoot;
 import repository.MoviesRepo;
+import service.sessions.SessionManager;
 import utils.SQLUtils;
 import utils.SessionFactoryImpl;
 
@@ -19,31 +21,43 @@ import java.util.List;
 
 public class MoviesRepoImpl implements MoviesRepo {
     
-    private final Connection connection;
+    // private final Connection connection;
     private final SessionFactory sessionFactory = SessionFactoryImpl.getInstance();
 
-    public MoviesRepoImpl(Connection connection) {
-        this.connection = connection;
-    }
+    // public MoviesRepoImpl(Connection connection) {
+    //     this.connection = connection;
+    // }
     
     @Override
-    public void saveMovie(MovieEntity movieEntity, Long chat_id) {
-        try {
-            String query = "call save_film(?, ?, ?, ?, ?)";
+    public void saveMovie(MovieEntity movieEntity, Long chatId) {
 
-            PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
-            preparedStatement.setLong(1, movieEntity.getId());
-            preparedStatement.setString(2, movieEntity.getRef());
-            preparedStatement.setString(3, movieEntity.getTitle());
-            preparedStatement.setInt(4, movieEntity.getYear());
-            preparedStatement.setLong(5, chat_id);
-            preparedStatement.execute();
-
-            preparedStatement.close();
-            
-        } catch (SQLException e) {
-            throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
-        }
+        Session session = sessionFactory.openSession();
+        
+        UserEntity currentUser = session.find(UserEntity.class, chatId);
+        movieEntity.addUser(currentUser);
+        
+        session.beginTransaction();
+        session.persist(movieEntity);
+        session.getTransaction().commit();
+        session.close();
+        
+        
+        // try {
+        //     String query = "call save_film(?, ?, ?, ?, ?)";
+        //
+        //     PreparedStatement preparedStatement = SQLUtils.getPreparedStatement(query, connection);
+        //     preparedStatement.setLong(1, movieEntity.getId());
+        //     preparedStatement.setString(2, movieEntity.getRef());
+        //     preparedStatement.setString(3, movieEntity.getTitle());
+        //     preparedStatement.setInt(4, movieEntity.getYear());
+        //     preparedStatement.setLong(5, chatId);
+        //     preparedStatement.execute();
+        //
+        //     preparedStatement.close();
+        //
+        // } catch (SQLException e) {
+        //     throw new RuntimeException("Произошла ошибка выполнения запроса. Информация: " + e.getMessage());
+        // }
     }
 
     @Override

@@ -11,6 +11,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.*;
 import org.telegram.telegrambots.meta.api.objects.User;
+import repository.MoviesRepo;
+import repository.impl.MoviesRepoImpl;
+import repository.impl.UsersMoviesRepoImpl;
 import utils.HibernateUtil;
 
 import java.sql.Timestamp;
@@ -191,56 +194,28 @@ public class LearnHibernate {
     }
 
     @Test
-    @DisplayName("learn criteria builder")
-    void learn_criteria_builder() {
+    void
+    save_movie_works_properly() {
         
-        //region Сетап: сохранение юзера с фильмом в БД
-        MovieEntity movie = MovieEntity.builder()
-                .title("Iron Man Ressurrection")
-                .ref("reference")
-                .year(9991)
+        MoviesRepo repo = new MoviesRepoImpl();
+        
+        UserEntity currentUser = UserEntity.builder()
+                .username("test")
+                .id(1234)
                 .build();
-        
-        UserEntity user = UserEntity.builder()
-                .username("baba_fedora")
-                .id(1388)
-                .build();
-        
-        List <MovieEntity> userMovies = user.getMovies();
-        userMovies.add(movie);
-        
-        session.save(user);
+        session.save(currentUser);
         session.getTransaction().commit();
-        //endregion
         
-        Session anotherSession = sessionFactory.openSession();
-        CriteriaBuilder cb = anotherSession.getCriteriaBuilder();
-        CriteriaQuery <UserEntity> criteriaQuery = cb.createQuery(UserEntity.class);
-        Root <UserEntity> userEntity = criteriaQuery.from(UserEntity.class);
-        userEntity.join("movies");
+        MovieEntity movie = MovieEntity.builder()
+                .title("test movie")
+                .year(9999)
+                .build();
         
-        // CriteriaQuery <UserEntity> result = criteriaQuery
-        //         .select(userEntity)
-        //         .where(cb.and(
-        //                         cb.equal(userEntity.get("id"),
-        //                                 me.get("id"))
-        //                 )
-        //         );
-        //
-        // anotherSession.createQuery(criteriaQuery)
+        repo.saveMovie(movie, currentUser.getId());
         
-        // criteriaQuery.select(root).where(criteriaBuilder.equal(
-        //         root.get("user").
-        // ))
-        
-        // Join <MovieEntity, UserEntity> moviesJoin = root.join("users");
-        // CriteriaQuery <UserEntity> result = criteriaQuery.select(root).where(criteriaBuilder.and(
-        //         criteriaBuilder.equal(root.get("chatId"), chatID),
-        //         criteriaBuilder.equal(moviesJoin.get("id"), movie.getId())
-        // ));
-        
-        System.out.println("");
-        
+        MovieEntity found = session.find(MovieEntity.class, movie.getId());
+        assertEquals(movie, found);
     }
+    
     
 }

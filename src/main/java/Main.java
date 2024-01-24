@@ -38,55 +38,16 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        // StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().build();
-        SessionFactory sessionFactory = new Configuration()
-                .addAnnotatedClass(UserEntity.class)
-                .addAnnotatedClass(MovieEntity.class)
-                .addAnnotatedClass(HistoryEntity.class)
-                .configure().buildSessionFactory();
-//        Session session = sessionFactory.openSession();
-//        session.beginTransaction();
+       WishlistTelegramBot bot = new WishlistTelegramBot();
+       LongPollingBot botProxy = createBotProxy(bot);
 
-        MoviesRepoImpl moviesRepo = new MoviesRepoImpl(DBManager.getInstance().getConnection());
-        UsersMoviesRepoImpl usersMoviesRepo = new UsersMoviesRepoImpl(DBManager.getInstance().getConnection());
-        List<MovieEntity> movies = moviesRepo.getMovies(124121L);
-        usersMoviesRepo.deleteMoviesOfUser(124121L);
-        List<MovieEntity> moviesAfter = moviesRepo.getMovies(124121L);
-
-//        UsersMoviesRepoImpl usersMoviesRepo = new UsersMoviesRepoImpl(DBManager.getInstance().getConnection());
-//        usersMoviesRepo.movieRegistered(MovieEntity.builder()
-//                        .id(121512L)
-//                .build(), 12412L);
-
-//        session.save(MovieEntity.builder()
-//                .ref("afsfa")
-//                .title("afsfa")
-//                .year(1995)
-//                .build());
-//        MovieEntity movieEntity = session.find(MovieEntity.class, 1);
-//
-//        session.save(UserEntity.builder()
-//                        .id(1215125)
-//                        .username("TEST")
-//                        .movies(List.of(movieEntity))
-//                .build());
-//
-//        UserEntity userEntity = session.find(UserEntity.class, 1215125);
-//
-//        session.getTransaction().commit();
-
-        return;
-
-//        WishlistTelegramBot bot = new WishlistTelegramBot();
-//        LongPollingBot botProxy = createBotProxy(bot);
-//
-//        try {
-//            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-//            telegramBotsApi.registerBot(botProxy);
-//            bot.init();
-//        } catch (Exception e) {
-//            throw new RuntimeException("Телеграм бот API в main()");
-//        }
+       try {
+           TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+           telegramBotsApi.registerBot(botProxy);
+           bot.init();
+       } catch (Exception e) {
+           throw new RuntimeException("Телеграм бот API в main()");
+       }
 
     }
 

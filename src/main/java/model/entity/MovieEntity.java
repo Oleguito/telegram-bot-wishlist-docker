@@ -4,6 +4,7 @@ package model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +29,18 @@ public class MovieEntity {
     private List <UserEntity> users;
     
 //    private final byte[] picture;
+    
+    public void addUser(UserEntity user) {
+        makeSureUsersNotNull();
+        users.add(user);
+        user.getMovies().add(this);
+    }
+    
+    private void makeSureUsersNotNull() {
+        if (users == null) {
+            users = new ArrayList <>();
+        }
+    }
     
     @Override
     public String toString() {
