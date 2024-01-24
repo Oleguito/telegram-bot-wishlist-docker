@@ -20,7 +20,7 @@ public class HistoryEntity {
     @SequenceGenerator(name = "history_seq_gen", sequenceName = "history_sequence")
     private long id;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private UserEntity user;
     

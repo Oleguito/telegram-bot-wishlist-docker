@@ -27,16 +27,23 @@ public class MoviesRepoImpl implements MoviesRepo {
         Session session = sessionFactory.openSession();
         
         UserEntity currentUser = session.find(UserEntity.class, chatId);
-        movieEntity.addUser(currentUser);
-        
+        currentUser.getMovies().add(movieEntity);
         session.beginTransaction();
-        /*  TODO: если написать persist то Hibernate ругается
-        *   что фильм не находится в контексте для сохранения
-        *   un.... entity passed to persist */
-        session.save(movieEntity);
+        session.merge(currentUser);
         session.getTransaction().commit();
-        session.close();
         
+        
+        // UserEntity currentUser = session.find(UserEntity.class, chatId);
+        // movieEntity.addUser(currentUser);
+        //
+        // session.beginTransaction();
+        // /*  TODO: если написать persist то Hibernate ругается
+        // *   что фильм не находится в контексте для сохранения
+        // *   un.... entity passed to persist */
+        // session.save(movieEntity);
+        // session.getTransaction().commit();
+        // session.close();
+        //
         
         // try {
         //     String query = "call save_film(?, ?, ?, ?, ?)";
