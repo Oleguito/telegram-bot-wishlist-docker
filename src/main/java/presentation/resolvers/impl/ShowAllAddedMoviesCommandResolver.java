@@ -1,12 +1,15 @@
 package presentation.resolvers.impl;
 
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import presentation.resolvers.CommandResolver;
 import application.service.MoviesService;
 import application.service.impl.MoviesServiceImpl;
 import application.service.sessions.SessionManager;
 import application.service.statemachine.State;
+import domain.model.entity.MovieEntity;
 import infrastructure.utils.TelegramBotUtils;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import presentation.resolvers.CommandResolver;
+
+import java.util.List;
 
 public class ShowAllAddedMoviesCommandResolver implements CommandResolver {
 
@@ -24,15 +27,20 @@ public class ShowAllAddedMoviesCommandResolver implements CommandResolver {
     }
 
     @Override
-    public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chat_id) {
-        if(text.startsWith("/showall")) {
+    public void resolveCommand(TelegramLongPollingBot tgBot, String text, Long chatId) {
+        if (text.startsWith("/showall")) {
 
-            moviesService.getMovies(chat_id)
-                    .stream()
-                    .forEach(e -> {
-                        TelegramBotUtils.sendMessage(tg_bot,e.toString(),chat_id); // TODO: поправить вывод информации о фильме
-                    });
-            sessionManager.getSession(chat_id).setState(State.IDLE);
+            List<MovieEntity> movies = moviesService.getMovies(chatId);
+
+            if (movies.isEmpty()) {
+                TelegramBotUtils.sendMessage(tgBot, "У вас нет добавленных фильмов:(", chatId);
+            } else {
+                movies.stream()
+                        .forEach(e -> {
+                            TelegramBotUtils.sendMessage(tgBot, e.toString(), chatId); // TODO: поправить вывод информации о фильме
+                        });
+            }
+            sessionManager.getSession(chatId).setState(State.IDLE);
         }
     }
 }

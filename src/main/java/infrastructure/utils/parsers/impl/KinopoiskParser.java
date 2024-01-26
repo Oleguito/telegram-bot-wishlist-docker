@@ -73,8 +73,8 @@ public class KinopoiskParser implements Parser {
     private Document getDocument(String reference) {
         try {
             
-            var idx = reference.indexOf("/film/");
-            var path = reference.substring(idx);
+//            var idx = reference.indexOf("/film/");
+//            var path = reference.substring(idx);
             
             var sexyCookies = new CookiesUtils();
 
