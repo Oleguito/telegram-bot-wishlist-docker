@@ -24,38 +24,40 @@ public class MovieEntity {
     private String ref;
     private String title;
     private Integer year;
-    
+
     @ManyToMany(mappedBy = "movies")
-    private List <UserEntity> users;
-    
+    private List<UserEntity> users;
+
 //    private final byte[] picture;
-    
+
     public void addUser(UserEntity user) {
         makeSureUsersNotNull();
         users.add(user);
         user.getMovies().add(this);
     }
-    
+
     private void makeSureUsersNotNull() {
         if (users == null) {
-            users = new ArrayList <>();
+            users = new ArrayList<>();
         }
     }
-    
+
     @Override
     public String toString() {
-        return "MovieEntity{" +
-                "id=" + id +
-                ", ref='" + ref + '\'' +
-                ", title='" + title + '\'' +
-                ", year=" + year +
-                '}';
+        return "ID фильма: " + id +
+                "\nСсылка: '" + ref + '\'' +
+                "\nНазвание фильма: '" + title + '\'' +
+                "\nГод фильма: " + year;
     }
-    
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         MovieEntity that = (MovieEntity) o;
         return id == that.id &&
                 Objects.equals(ref, that.ref) &&

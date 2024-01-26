@@ -1,12 +1,12 @@
 package presentation.resolvers.impl;
 
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import presentation.resolvers.CommandResolver;
 import application.service.MoviesService;
 import application.service.impl.MoviesServiceImpl;
 import application.service.sessions.SessionManager;
 import application.service.statemachine.State;
 import infrastructure.utils.TelegramBotUtils;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import presentation.resolvers.CommandResolver;
 
 import java.util.stream.Collectors;
 
@@ -19,38 +19,36 @@ public class FindMovieByTitleCommandResolver implements CommandResolver {
         this.moviesService = new MoviesServiceImpl();
     }
 
+    private static void setSessionStateForThisUser(Long chatId, State state) {
+        SessionManager.getInstance().getSession(chatId).setState(state);
+    }
+
     @Override
-    public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chat_id) {
-        if(text.startsWith("/findbytitle")) {
-            
-            TelegramBotUtils.sendMessage(tg_bot, "Введите название фильма", chat_id);
-            setSessionStateForThisUser(chat_id, State.FIND_BY_TITLE);
-            
+    public void resolveCommand(TelegramLongPollingBot tg_bot, String text, Long chatId) {
+        if (text.startsWith("/findbytitle")) {
+
+            TelegramBotUtils.sendMessage(tg_bot, "Введите название фильма", chatId);
+            setSessionStateForThisUser(chatId, State.FIND_BY_TITLE);
+
         } else {
-            var movies = moviesService.getMovies(chat_id).stream()
+            var movies = moviesService.getMovies(chatId).stream()
                     .filter(
                             e -> e.getTitle().toLowerCase().contains(text.toLowerCase())
                     )
                     .toList();
-            if(movies.isEmpty()) {
+            if (movies.isEmpty()) {
                 TelegramBotUtils.sendMessage(tg_bot, """
                         Ничего не нашлось... 😞 Может, ачипятка??)
-                        """,chat_id);
-                TelegramBotUtils.sendMessage(tg_bot, """
-                        Го еще разок!
-                        """,chat_id);
+                        """, chatId);
+                setSessionStateForThisUser(chatId, State.IDLE);
                 return;
             }
             var to = movies.stream()
                     .map(e -> e.toString())
                     .collect(Collectors.joining("\n"));
-            TelegramBotUtils.sendMessage(tg_bot,to,chat_id);
-            setSessionStateForThisUser(chat_id, State.IDLE);
+            TelegramBotUtils.sendMessage(tg_bot, to, chatId);
+            setSessionStateForThisUser(chatId, State.IDLE);
         }
-    }
-    
-    private static void setSessionStateForThisUser(Long chat_id, State state) {
-        SessionManager.getInstance().getSession(chat_id).setState(state);
     }
 
     @Override

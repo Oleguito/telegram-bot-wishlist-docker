@@ -9,8 +9,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 public class ButtonGenerator {
     public static InlineKeyboardButton generateInlineButton(Command type) {
         InlineKeyboardButton newInlineButton = new InlineKeyboardButton();
+
         newInlineButton.setText(type.getCommandButtonText());
         newInlineButton.setCallbackData(type.getCommandCallbackData());
+
         return newInlineButton;
     }
     
