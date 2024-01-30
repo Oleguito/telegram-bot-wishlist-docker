@@ -115,8 +115,9 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             SessionManager.getInstance().getSession(chatID).setState(State.IDLE);
             return;
         }
-        if(commandResolver != Commands.CANCEL.getValue())
+        if(commandResolver != Commands.CANCEL.getValue()) {
             showCancelButton(chatID);
+        }
         commandResolver.resolveCommand(this, text, chatID);
     }
 
