@@ -1,3 +1,6 @@
+import domain.model.entity.MovieEntity;
+import infrastructure.utils.CookiesUtils2;
+import infrastructure.utils.parsers.impl.KinopoiskParser;
 import presentation.bot.handlers.WishlistTelegramBot;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +27,12 @@ public class Main {
     private final HistoryService historyService = new HistoryServiceImpl();
 
     public static void main(String[] args) throws IOException {
-
-       WishlistTelegramBot bot = new WishlistTelegramBot();
-       LongPollingBot botProxy = createBotProxy(bot);
+        
+        // CookiesUtils2 cookiesUtils2 = new CookiesUtils2("src/main/resources/updatedCookiesFile");
+        // MovieEntity movie = new KinopoiskParser().parse("https://www.kinopoisk.ru/film/476/");
+        
+        WishlistTelegramBot bot = new WishlistTelegramBot();
+        LongPollingBot botProxy = createBotProxy(bot);
 
        try {
            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -35,7 +41,7 @@ public class Main {
        } catch (Exception e) {
            throw new RuntimeException("Телеграм бот API в main()");
        }
-
+       
     }
 
     private static LongPollingBot createBotProxy(WishlistTelegramBot bot) {

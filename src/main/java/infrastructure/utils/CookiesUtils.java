@@ -1,7 +1,5 @@
 package infrastructure.utils;
 
-import lombok.Getter;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -12,11 +10,11 @@ public class CookiesUtils {
     public Map <String, String> headersAfter;
     public Map <String, String> cookies;
     
-    public CookiesUtils() {
+    public CookiesUtils(String filePath) {
         String updatedCookies = "";
         
         try {
-            updatedCookies = Files.readString(Path.of("src/main/resources/updatedCookiesFile"));
+            updatedCookies = Files.readString(Path.of(filePath));
         } catch (Exception e) {
             e.getMessage();
         }
@@ -50,12 +48,12 @@ public class CookiesUtils {
         
         cookiesString = cookiesString.substring(8);
         String[] cookiesStringSplit = cookiesString.split("\s");
-        
-        // Arrays.stream(cookiesStringSplit).forEach(System.out::println);
-        
+
         Arrays.stream(cookiesStringSplit).forEach(e -> {
             String[] split = e.split("=");
-            result.put(split[0], split[1]);
+            String key = split[0].replaceAll(":","");
+            String value = split[1];
+            result.put(key, value);
         });
         
         return result;

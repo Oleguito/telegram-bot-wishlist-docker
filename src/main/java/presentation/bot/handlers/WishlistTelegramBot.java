@@ -1,6 +1,7 @@
 package presentation.bot.handlers;
 
 import presentation.bot.buttons.ButtonGenerator;
+import presentation.commands.Command;
 import presentation.commands.Commands;
 import application.config.Configuration;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +20,9 @@ import application.service.sessions.SessionManager;
 import application.service.statemachine.State;
 import infrastructure.utils.TelegramBotUtils;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -114,22 +118,63 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             SessionManager.getInstance().getSession(chatID).setState(State.IDLE);
             return;
         }
+        showCancelButtonWithText(chatID, "Операция выполняется");
         commandResolver.resolveCommand(this, text, chatID);
     }
 
-    private void greetingScreen(Long chat_id) {
+    private void showCancelButton(Long chatId) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText("Текст НЕ МОЖЕТ БЫТЬ ПУСТЫМ МЗФКА\nЛибо нажмите эту кнопку");
+        
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();
+        buttonLines.add(List.of(ButtonGenerator.generateInlineButton(Commands.CANCEL.getValue())));
+        
+        markupInline.setKeyboard(buttonLines);
+        sendMessage.setReplyMarkup(markupInline);
+        
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException("showCancelButton: Что-то пошло не так при отправке сообщения", e);
+        }
+    }
+    
+    public void showCancelButtonWithText(Long chatId, @NotNull @NotBlank @NotEmpty String text) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(text + "\nЛибо нажмите эту кнопку");
+        
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();
+        buttonLines.add(List.of(ButtonGenerator.generateInlineButton(Commands.CANCEL.getValue())));
+        
+        markupInline.setKeyboard(buttonLines);
+        sendMessage.setReplyMarkup(markupInline);
+        
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException("showCancelButton: Что-то пошло не так при отправке сообщения", e);
+        }
+    }
+    
+    private void greetingScreen(Long chatId) {
 
-        TelegramBotUtils.sendImage(this, "src/main/resources/logo.jpg", chat_id);
+        TelegramBotUtils.sendImage(this, "src/main/resources/logo.jpg", chatId);
 
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chat_id);
+        sendMessage.setChatId(chatId);
         sendMessage.setText("Сделайте выбор 😉");
 
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();
-        for (var i : Commands.values()) {
-            buttonLines.add(List.of(ButtonGenerator.generateInlineButton(i.getValue())));
-        }
+        buttonLines.add(List.of(ButtonGenerator.generateInlineButton(Commands.ADD.getValue())));
+        buttonLines.add(List.of(ButtonGenerator.generateInlineButton(Commands.FIND_BY_TITLE.getValue())));
+        buttonLines.add(List.of(ButtonGenerator.generateInlineButton(Commands.DELETE.getValue())));
+        buttonLines.add(List.of(ButtonGenerator.generateInlineButton(Commands.HISTORY.getValue())));
+        buttonLines.add(List.of(ButtonGenerator.generateInlineButton(Commands.SHOW_ALL.getValue())));
 
         markupInline.setKeyboard(buttonLines);
         sendMessage.setReplyMarkup(markupInline);

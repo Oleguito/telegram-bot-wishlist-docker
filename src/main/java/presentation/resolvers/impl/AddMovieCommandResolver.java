@@ -51,7 +51,8 @@ public class AddMovieCommandResolver implements CommandResolver {
             
             MovieEntity movie = parser.parse(text);
             
-            if(movieAlreadyRegisteredInUsersMoviesDB(movie, chat_id)) { //TODO: это реализовано в процедуре save_film
+            //TODO: это реализовано в процедуре save_film
+            if(movieAlreadyRegisteredInUsersMoviesDB(movie, chat_id)) {
                 TelegramBotUtils.sendMessage(tg_bot, """
                     Такое кино вы уже добавляли!)
                     """, chat_id);

@@ -17,6 +17,9 @@ public class ButtonGenerator {
     }
     
     public static SetMyCommands generateMenuButtons () {
-        return new SetMyCommands(StartCommands.init(), new BotCommandScopeDefault(), null);
+        return new SetMyCommands(
+                StartCommands.init(),
+                new BotCommandScopeDefault(),
+                null);
     }
 }
