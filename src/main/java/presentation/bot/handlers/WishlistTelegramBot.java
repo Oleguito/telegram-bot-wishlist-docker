@@ -20,6 +20,9 @@ import application.service.sessions.SessionManager;
 import application.service.statemachine.State;
 import infrastructure.utils.TelegramBotUtils;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -115,9 +118,7 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
             SessionManager.getInstance().getSession(chatID).setState(State.IDLE);
             return;
         }
-        if(commandResolver != Commands.CANCEL.getValue()) {
-            showCancelButton(chatID);
-        }
+        showCancelButtonWithText(chatID, "Операция выполняется");
         commandResolver.resolveCommand(this, text, chatID);
     }
 
@@ -125,6 +126,25 @@ public class WishlistTelegramBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.setText("Текст НЕ МОЖЕТ БЫТЬ ПУСТЫМ МЗФКА\nЛибо нажмите эту кнопку");
+        
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();
+        buttonLines.add(List.of(ButtonGenerator.generateInlineButton(Commands.CANCEL.getValue())));
+        
+        markupInline.setKeyboard(buttonLines);
+        sendMessage.setReplyMarkup(markupInline);
+        
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException("showCancelButton: Что-то пошло не так при отправке сообщения", e);
+        }
+    }
+    
+    public void showCancelButtonWithText(Long chatId, @NotNull @NotBlank @NotEmpty String text) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(text + "\nЛибо нажмите эту кнопку");
         
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttonLines = new ArrayList<>();
