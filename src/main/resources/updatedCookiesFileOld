@@ -1,0 +1,36 @@
+:authority:
+www.kinopoisk.ru
+:method:
+GET
+:path:
+/film/476/
+:scheme:
+https
+Accept:
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding:
+gzip, deflate, br
+Accept-Language:
+en-US,en;q=0.9
+Cache-Control:
+max-age=0
+Cookie:
+yandex_login=tzswagbucksemail@gmail.com; i=JJjxU/VELBA3OOWz/qOBDH8ulXMHALui33Ixunz/LCsYnICrdBJnnzlQG4qftvJ4uX6aPTBk2iR4QpV6iFK9kxlOO3I=; yandexuid=33954861699345492; L=B1RdVFZ8B3ADXUdnTVNmY04ARnRIeGRXQioYEwMrCCRVIDQ2BQwNOCsTKxUDFnobCh4=.1699691607.15523.392120.46c0dfee1595bf69285bc3fa1f0c8838; gdpr=0; _ym_uid=1700581534862868100; yuidss=33954861699345492; location=1; coockoos=4; crookie=KXr0UhI2sMWGi7dHfTlxmm28Tm6XVr2zsxY3eEbB60r2sQomvr0NugOjhIihQ/Ap6kkjyAOk6ZivVInN61XMFGaOQNc=; cmtchd=MTcwMjk5OTg2NjUwNQ==; mobile=no; mda_exp_enabled=1; ya_sess_id=3:1703432079.5.0.1699691607765:-IogsA:c6.1.2:1|1913634698.-1.0.1:345314738.3:1699691607|30:10221342.447637.BXlzcG3woTNpRyvKZ1r5kp529Es; sessar=1.1185.CiCX6eZguO3QNbR6DcfnBIU7eztDwHKgxEd131wja7nJmQ.nu3TIwTeH2Hr9FZHanc4NaEEeP4lo2DTixKaF3G9Nic; mda2_beacon=1703432079518; no-re-reg-required=1; yp=1703518534.yu.33954861699345492; ymex=1706024134.oyu.33954861699345492; _csrf=8dbumJu9IOL5bFOqCx7HCiEl; disable_server_sso_redirect=1; _yasc=uyE9FLa6TShPIedQXZflfPntcVFGwMvnMmG7NJ9rP5tMhMIbga5VOuYcgKex/2I=; _ym_isad=1; desktop_session_key=28ea112c4d0e99bfc805d5aab0c5cecbe3c379ed5e30a48edf4db0dc2444d4115a6a2eebfbfd0353865675eb9b7a4a4b7d114ab1f2a94aa72fae9672ab26c4fb00dc6a8496abc8087eb2c2a7769abcbc2d4c1677948438a21310a83c84988562; desktop_session_key.sig=ONEtr_2cSx9Nb9VwKioX8aW4UpA; PHPSESSID=29c0c9978ceaf3837031d2bbefdd6ec1; user_country=ru; yandex_gid=10987; tc=5606; uid=159979495; _ym_d=1703487431
+Sec-Ch-Ua:
+"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"
+Sec-Ch-Ua-Mobile:
+?0
+Sec-Ch-Ua-Platform:
+"Windows"
+Sec-Fetch-Dest:
+document
+Sec-Fetch-Mode:
+navigate
+Sec-Fetch-Site:
+same-origin
+Sec-Fetch-User:
+?1
+Upgrade-Insecure-Requests:
+1
+User-Agent:
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
