@@ -2,7 +2,7 @@ package presentation.commands;
 
 public enum Commands {
     
-    START(Command.builder()
+    ADD(Command.builder()
             .commandText("/add")
             .commandCallbackData("/add")
             .commandButtonText("Добавить фильм по ссылке")
@@ -26,6 +26,11 @@ public enum Commands {
             .commandText("/showall")
             .commandCallbackData("/showall")
             .commandButtonText("Показать все добавленные фильмы")
+            .build()),
+    CANCEL(Command.builder()
+            .commandText("/cancel")
+            .commandCallbackData("/cancel")
+            .commandButtonText("Мне передумалось!!")
             .build());
     
     Command value;
