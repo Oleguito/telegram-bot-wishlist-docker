@@ -18,11 +18,14 @@ import java.util.Objects;
 public class MovieEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "movies_seq_gen", sequenceName = "movies_sequence")
+    // @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    // @SequenceGenerator(name = "movies_seq_gen", sequenceName = "movies_sequence")
     private long id;
+    
     private String ref;
+    
     private String title;
+    
     private Integer year;
 
     @ManyToMany(mappedBy = "movies")

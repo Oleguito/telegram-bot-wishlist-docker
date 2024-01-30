@@ -29,34 +29,34 @@ public class CookiesUtils2 {
         // return result;
     }
     
-    private Map<String, String> getCookies(String cookiesString) {
-        Map<String, String> result = new HashMap <>();
-        
-        cookiesString = cookiesString.substring(8);
-        String[] cookiesStringSplit = cookiesString.split("\s");
-
-        Arrays.stream(cookiesStringSplit).forEach(e -> {
-            String[] split = e.split("=");
-            result.put(split[0], split[1]);
-        });
-        
-        return result;
-    }
+    // private Map<String, String> getCookies(String cookiesString) {
+    //     Map<String, String> result = new HashMap <>();
+    //
+    //     cookiesString = cookiesString.substring(8);
+    //     String[] cookiesStringSplit = cookiesString.split("\s");
+    //
+    //     Arrays.stream(cookiesStringSplit).forEach(e -> {
+    //         String[] split = e.split("=");
+    //         result.put(split[0], split[1]);
+    //     });
+    //
+    //     return result;
+    // }
     
-    private Map<String, String> getHeadersBefore(String before) {
-        before = before.replaceAll(":", "");
-        // before = before.replaceAll("\"", "\\\"");
-        String[] beforeItems = before.split("\r\n");
-        Map<String, String> headersBeforeMap = new HashMap <>();
-        
-        Arrays.stream(beforeItems).forEach(e -> {
-            // System.out.println(e);
-            // System.out.println("");
-            String[] split = e.split("\t");
-            headersBeforeMap.put(split[0], split[1]);
-        });
-        return headersBeforeMap;
-    }
+    // private Map<String, String> getHeadersBefore(String before) {
+    //     before = before.replaceAll(":", "");
+    //     // before = before.replaceAll("\"", "\\\"");
+    //     String[] beforeItems = before.split("\r\n");
+    //     Map<String, String> headersBeforeMap = new HashMap <>();
+    //
+    //     Arrays.stream(beforeItems).forEach(e -> {
+    //         // System.out.println(e);
+    //         // System.out.println("");
+    //         String[] split = e.split("\t");
+    //         headersBeforeMap.put(split[0], split[1]);
+    //     });
+    //     return headersBeforeMap;
+    // }
     
     private Map<String, String> prepareUpdatedCookies(String updatedCookies) {
         Map<String, String> result = new HashMap <>();

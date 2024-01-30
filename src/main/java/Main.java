@@ -29,8 +29,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         
         // CookiesUtils2 cookiesUtils2 = new CookiesUtils2("src/main/resources/updatedCookiesFile");
-        MovieEntity movie = new KinopoiskParser().parse("https://www.kinopoisk.ru/film/476/");
-        
+        // MovieEntity movie = new KinopoiskParser().parse("https://www.kinopoisk.ru/film/476/");
         
         WishlistTelegramBot bot = new WishlistTelegramBot();
         LongPollingBot botProxy = createBotProxy(bot);
@@ -42,7 +41,7 @@ public class Main {
        } catch (Exception e) {
            throw new RuntimeException("Телеграм бот API в main()");
        }
-
+       
     }
 
     private static LongPollingBot createBotProxy(WishlistTelegramBot bot) {
