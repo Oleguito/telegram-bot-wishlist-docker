@@ -4,10 +4,16 @@
 
 Step 1
 ```
-docker-compose up -d
+git clone https://github.com/Oleguito/telegram-bot-wishlist-docker
+cd telegram-bot-wishlist-docker
 ```
 
 Step 2
+```
+docker-compose up -d
+```
+
+Step 3
 
 ```
 https://t.me/kinopoiskwishlistbot
