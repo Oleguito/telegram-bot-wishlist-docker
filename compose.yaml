@@ -1,0 +1,28 @@
+version: '3'
+services:
+  app:
+    build: .
+    environment:
+#      - POSTGRES_HOST=db
+      - DB_URL=jdbc:postgresql://db:5432/tgwishlistbot_db
+      - DB_USERNAME=tgwishlistbot_user
+      - DB_PASSWORD=password
+    ports:
+      - "9090:9090"
+    depends_on:
+      - db
+#    networks:
+#      - app-network
+  db:
+    image: postgres:latest
+    ports: 
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: tgwishlistbot_db
+      POSTGRES_USER: tgwishlistbot_user
+      POSTGRES_PASSWORD: password
+#    networks:
+#      - app-network
+#networks:
+#  app-network:
+#    driver: bridge

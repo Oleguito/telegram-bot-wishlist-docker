@@ -14,6 +14,7 @@ import application.service.HistoryService;
 import application.service.impl.HistoryServiceImpl;
 import application.service.impl.UserServiceImpl;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.sql.Timestamp;
@@ -28,6 +29,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         
+        
+        // Dotenv dotenv = Dotenv.configure().directory("C:\\Users\\1\\Desktop\\tg-bot-wishlist\\project-tg-bot-wishlist").load();
+
         // CookiesUtils2 cookiesUtils2 = new CookiesUtils2("src/main/resources/updatedCookiesFile");
         // MovieEntity movie = new KinopoiskParser().parse("https://www.kinopoisk.ru/film/476/");
         
